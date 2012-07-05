@@ -1,6 +1,6 @@
 # dokumentiere
 
-a node.js module for documentation
+## a node.js module for documentation
 
 Let's jump right in
 
@@ -43,7 +43,7 @@ That is not the way our javascript is developed. we make heavy usage of fantasti
 like closures, callbacks or module-pattern. and we want to document jQuery-widgets or plugins too.
 
 
-## detailed description
+### detailed description
 		/*-
 		
 every documentation block is started by `/*-`
@@ -116,7 +116,7 @@ Instead it is followed by vertical lines, which are transformed to code-examples
 		 
 and with `-*/` you end the documentation block.
 		
-## Customization
+### Customization
 
 You have a lot of freedom when it comes to the Parameter and the the return-types. But when you
 want to add new `">"`-Statements or you want to add a new `[ ... ]` because the predefined do 
