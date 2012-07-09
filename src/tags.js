@@ -50,6 +50,10 @@ var tags = {
 	'#': function(obj, line) {
 		obj.deps = obj.deps || [];
 		obj.deps = obj.deps.concat(line.split(','));
+	},
+	'!': function(obj, line) {
+		obj.author = obj.author || [];
+		obj.author = obj.author.concat(line.split(','));
 	}
 };
 
