@@ -1,0 +1,25 @@
+{
+	"name": "dokumentiere",
+	"description": "JavaScript documentation generator",
+	"version": "0.1.0",
+	"author": "Philipp Paul <me@philipp-paul.com>",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/bobbor/dokumentiere.git"
+	},
+	"keywords": [
+		"documentation",
+		"docs",
+		"jsdoc"
+	],
+	"bin": {
+		"dokumentiere": "./src/doku"
+	},
+	"dependencies": {
+		"commander": "1.0.0"
+	},
+	"devDependencies": {
+		"mocha": "*",
+		"should": "*"
+	}
+}

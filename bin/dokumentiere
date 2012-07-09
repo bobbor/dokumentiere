@@ -1,0 +1,67 @@
+#!/usr/bin/env node
+
+var
+	  program      = require('commander')
+	, util         = require('util')
+	, doku         = require('../')
+	, cwd          = process.cwd()
+	, fs           = require('fs')
+	, path         = require('path')
+	, list         = function(items) {
+		return items.split(',') || [];
+	}
+	;
+
+
+program
+	.version('0.1.1')
+	.option('-f, --files <files>', 'which files to document', list, './')
+	.option('-o, --out <outFolder>', 'the folder to put the files to', 'out')
+	.option('-e, --exclude <files>', 'which files to exclude', list, [''])
+	.parse(process.argv)
+;
+['files', 'exclude'].forEach(function(arg, j) {
+	program[arg] = program[arg].map(function(elm, i, arr) {
+		return cwd+path.sep+elm;
+	});
+}); 
+
+function iterateOverFiles(callback) {
+	var cleared = [];
+	function iterate(files) {
+		if(!files.length) {
+			callback(cleared);
+			return;
+		}
+		var item = files.pop();
+		if(program.exclude.indexOf(item) !== -1) {
+			iterate(files);
+			return;
+		}
+		fs.stat(item, function(err, stat) {
+			if(err) { throw err; return; }
+			if(stat.isDirectory()) {
+				fs.readdir(item, function(err, items) {
+					if(err) { throw err; }
+					for(var i = 0, len = items.length; i < len; i++) {
+						files.push(item+path.sep+items[i]);
+					}
+					iterate(files);
+				});
+			} else {
+				if(/\.js$/.test(item)) {
+					cleared.push({
+						path: item,
+						name: item.substring(cwd.length+path.sep.length, item.length)
+					});
+				}
+				iterate(files);
+			}
+		});
+	}
+	iterate(program.files);
+}
+
+iterateOverFiles(function(files) {
+	doku.parse(files);
+});
