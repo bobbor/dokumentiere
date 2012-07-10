@@ -4,14 +4,16 @@ var parseLine = require('./tags').parseLine;
 var doku = {
 	parse: function(files) {
 		var doku = this;
+		var raw = {};
 		var iterate = function(arr) {
 			if(!arr.length) {
+				console.log(raw);
 				return;
 			}
 			var file = arr.pop();
 			fs.readFile(file.path, 'utf8', function(err, content) {
 				if(err) { throw err; }
-				doku.parseFile(content, file.name);
+				raw[file.name] = doku.parseFile(content, file.name);
 				iterate(arr);
 			});
 		}
@@ -43,16 +45,22 @@ var doku = {
 			}
 		}
 		for(i = 0, len = doku.length; i < len; i++) {
+			//console.log(doku[i].type);
 			if(doku[i].scope) {
 				ret.push(doku[i]);
-				ret[ret.length-1].functions = [];
+				if(doku[i].type !== 'function') {
+					ret[ret.length-1].functions = [];
+				}
 			}
 			else if(doku[i].visibility) {
-				ret[ret.length-1].functions.push(doku[i]);
+				if(ret[ret.length-1].functions) {
+					ret[ret.length-1].functions.push(doku[i]);
+				} else {
+					ret.push(doku[i]);
+				}
 			}
 		}
-		
-		process.stdout.write(JSON.stringify(ret, null, '  '));
+		return ret;
 	}, 
 	parseComment: function(comment) {
 		var co = {
@@ -60,13 +68,13 @@ var doku = {
 			type: comment[1]
 		};
 		function setupType(type) {
-			type = type.replace(/\[\s+([\S\s]+)\s+\]/, "$1").trim();
+			type = type.replace(/\[(\s|\s+)([\S\s]+)(\s|\s+)\]/, "$2").trim();
 			this.scope = type.substring(type.indexOf('(')+1, type.indexOf(')'));
 			if(this.scope === 'public' || this.scope === 'private') {
 				this.visibility = this.scope;
 				delete this.scope;
 			}
-			this.type = type.substring(0, type.indexOf('('));
+			this.type = type.substring(0, type.indexOf('(')-1);
 		}
 		co.name = co.name.substring(1, co.name.length).trim();
 		setupType.call(co, co.type);

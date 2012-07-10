@@ -441,7 +441,7 @@
 		/*-
 		 * addIndex
 		 
-		 [function (public)]
+		 [ function (public) ]
 		 
 		 * adds an index to selectIndexes @see selectIndexes
 		 
@@ -460,7 +460,7 @@
 		/*-
 		 * removeIndex
 		 
-		 [function (public)]
+		 [ function (public) ]
 		 
 		 * removes an index to selectIndexes @see selectIndexes
 		 
@@ -562,7 +562,7 @@
 		/*-
 		 * collapseAll
 		 
-		 [function (public) ]
+		 [ function (public) ]
 		 
 		 * collapses all open Panels
 		 
