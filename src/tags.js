@@ -80,10 +80,11 @@ var optionParamLine = function(line, avoidName) {
 		ret.valids = vals.shift().replace(validRE, "$1");
 		ret.valids.split(',');
 	}
-	if(see.test(vals[0])) {
-		inref = true;
-	}
 	while(vals.length) {
+		if(see.test(vals[0])) {
+			inref = true;
+			vals.shift();
+		}
 		if(inref) {
 			ret.ref.push(vals.shift());
 		} else {

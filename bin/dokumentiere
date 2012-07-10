@@ -11,6 +11,8 @@ var
 		return items.split(',') || [];
 	}
 	;
+	
+	path.sep = path.sep || require('os').platform().indexOf('win') !== -1 ? '\\' : '/';
 
 
 program

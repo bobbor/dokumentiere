@@ -6,6 +6,9 @@
 	var uniqueID = 0;
 	/*-
 	 *tabtree
+	 
+	 ! alexander.farkas, philipp.paul
+	 
 	 [ widget (ui) ]
 	 
 	 * Generates a Tab Control UI or an accordion

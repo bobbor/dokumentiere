@@ -81,10 +81,35 @@
 		 
 			return( min + parseInt( Math.random() * ( max-min+1 ), 10 ) );
 		},
+		/*-
+		 * randomSort
+		 [ function ($.Aperto) ]
+		 * a sort function to randomly arrange items in an array
+		 = (number) a number between -0.5 and 0.5
+		 -*/
 		randomSort: function() {return 0.5 - Math.random();},
+		/*-
+		 * numsort
+		 [ function ($.Aperto) ]
+		 * a sort function for numbers
+		 > Parameter
+		 - a (number) the first item to compare
+		 - b (number) the second item to compare
+		 = (number) the diff of the numbers indicating order
+		 -*/
 		numsort: function (a, b) {
 			return a - b;
 		},
+		/*-
+		 * throttle
+		 [ function ($.Aperto) ]
+		 * throttling the execution of the function "fn"
+		 > Parameter
+		 - fn (function) the function to throttle
+		 - delay (number) time in ms between executions
+		 - obj* (object) the context in which "fn" shall be executed
+		 = (function) the function to call (e.g. for event listeners)
+		 -*/
 		throttle: function(fn, delay, obj){
 			var timer;
 			obj = obj || window;
@@ -158,7 +183,14 @@
 		return ( $.attr(elem, 'tabindex') !== undefined );
 	};
 	
-	
+	/*-
+	 * firstExpOf
+	 [ plugin ]
+	 * finds the first element matching the sel.
+	 > Parameter
+	 - sel (string|jQuery) the element to matching
+	 = (jQuery) a collection of matching items
+	 -*/
 	$.fn.firstExpOf = function(sel){
 		if(!this[0]){
 			return this.pushStack([]);
@@ -177,6 +209,12 @@
 	};
 	
 	var currentLoc = location.href.split('#')[0];
+	/*-
+	 * getHrefHash
+	 [ plugin ]
+	 * gets the hash of given element
+	 = (string) the hash of the element working on
+	 -*/
 	$.fn.getHrefHash = function(sel){
 		var ret = '';
 		if(this[0]){

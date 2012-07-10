@@ -7,7 +7,7 @@ var doku = {
 		var raw = {};
 		var iterate = function(arr) {
 			if(!arr.length) {
-				console.log(raw);
+				process.stdout.write(JSON.stringify(raw, null, ' '));
 				return;
 			}
 			var file = arr.pop();
@@ -45,19 +45,19 @@ var doku = {
 			}
 		}
 		for(i = 0, len = doku.length; i < len; i++) {
-			//console.log(doku[i].type);
 			if(doku[i].scope) {
 				ret.push(doku[i]);
 				if(doku[i].type !== 'function') {
 					ret[ret.length-1].functions = [];
 				}
-			}
-			else if(doku[i].visibility) {
+			} else if(doku[i].visibility) {
 				if(ret[ret.length-1].functions) {
 					ret[ret.length-1].functions.push(doku[i]);
 				} else {
 					ret.push(doku[i]);
 				}
+			} else if(doku[i].type !== 'function') {
+				ret.push(doku[i]);
 			}
 		}
 		return ret;
@@ -69,12 +69,16 @@ var doku = {
 		};
 		function setupType(type) {
 			type = type.replace(/\[(\s|\s+)([\S\s]+)(\s|\s+)\]/, "$2").trim();
-			this.scope = type.substring(type.indexOf('(')+1, type.indexOf(')'));
-			if(this.scope === 'public' || this.scope === 'private') {
-				this.visibility = this.scope;
-				delete this.scope;
+			if(type.indexOf('(') !== -1) {
+				this.scope = type.substring(type.indexOf('(')+1, type.indexOf(')'));
+				if(this.scope === 'public' || this.scope === 'private') {
+					this.visibility = this.scope;
+					delete this.scope;
+				}
+				this.type = type.substring(0, type.indexOf('(')-1);
+			} else {
+				this.type = type;
 			}
-			this.type = type.substring(0, type.indexOf('(')-1);
 		}
 		co.name = co.name.substring(1, co.name.length).trim();
 		setupType.call(co, co.type);
