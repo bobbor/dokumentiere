@@ -1,7 +1,7 @@
 {
 	"name": "dokumentiere",
 	"description": "JavaScript documentation generator",
-	"version": "0.1.0",
+	"version": "0.1.5",
 	"author": "Philipp Paul <me@philipp-paul.com>",
 	"repository": {
 		"type": "git",
@@ -16,7 +16,8 @@
 		"dokumentiere": "./src/doku"
 	},
 	"dependencies": {
-		"commander": "1.0.0"
+		"commander": "1.0.0",
+		"jade": "0.26.3"
 	},
 	"devDependencies": {
 		"mocha": "*",
