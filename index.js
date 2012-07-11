@@ -1,1 +1,1 @@
-module.exports = require('./src/doku');
+module.exports = require( './src/doku' );

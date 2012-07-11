@@ -65,5 +65,17 @@ function iterateOverFiles(callback) {
 }
 
 iterateOverFiles(function(files) {
-	doku.parse(files);
+	fs.stat(cwd+path.sep+program.out, function(err, stat) {
+		if(err) {
+			fs.mkdir(err.path, function(o_O) {
+				if(o_O) {
+					console.log('cannot create out folder');
+					process.exit(1);
+				}
+				doku.parse(files, program.out);
+			});
+			return;
+		}
+		doku.parse(files, program.out);
+	});
 });
