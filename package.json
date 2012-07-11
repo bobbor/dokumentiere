@@ -13,14 +13,10 @@
 		"jsdoc"
 	],
 	"bin": {
-		"dokumentiere": "./src/doku"
+		"dokumentiere": "./bin/dokumentiere"
 	},
 	"dependencies": {
-		"commander": "1.0.0",
+		"commander": "0.6.1",
 		"jade": "0.26.3"
-	},
-	"devDependencies": {
-		"mocha": "*",
-		"should": "*"
 	}
 }
