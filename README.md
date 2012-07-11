@@ -2,6 +2,16 @@
 
 ## a node.js module for documentation
 
+it has not yet a npmjs-repository, so the only way to install is to download the .tar.gz and install it that way.
+
+	npm -g install dokumentiere.tar.gz
+	
+after that you can use it via commandline. to know what options are available use:
+
+	dokumentiere -h
+	
+---
+
 Let's jump right in
 
 		/*-
