@@ -1,4 +1,6 @@
 node_modules
 examples
+examples\jquery.tabtree.js
+examples\ui.a11y.ext.js
 .project
 .settings
