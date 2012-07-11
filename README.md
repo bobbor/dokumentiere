@@ -2,7 +2,7 @@
 
 ## a node.js module for documentation
 
-it has not yet a npmjs-repository, so the only way to install is to download the .tar.gz and install it that way.
+it has not yet a npmjs-repository, so the only way to install is to download the `.tar.gz` and install it that way.
 
 	npm -g install dokumentiere.tar.gz
 	
