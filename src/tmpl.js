@@ -15,7 +15,7 @@ var tmpl = {
 				this.items( obj[prop], out );
 			}
 		}
-		fc.recursiveCopy(['css', 'img'], ['src','templates', 'public'], out);
+		fc.recursiveCopy(['css', 'img'], ['templates','public'], out);
 	},
 	items: function( arr, out ) {
 		for( var i = 0, len = arr.length; i < len; i++) {

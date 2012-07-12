@@ -55,7 +55,7 @@ var doku = {
 					ret[ret.length - 1].functions = [];
 				}
 			} else if ( doku[i].visibility ) {
-				if ( ret[ret.length - 1].functions ) {
+				if ( ret[ret.length - 1] && ret[ret.length - 1].functions ) {
 					ret[ret.length - 1].functions.push( doku[i] );
 				} else {
 					ret.push( doku[i] );
