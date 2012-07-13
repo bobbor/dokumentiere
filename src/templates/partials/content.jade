@@ -1,0 +1,50 @@
+mixin detail(details, name)
+	b= details.name
+		- if(details.type && 'length' in details.type)
+			ul(class="types types-#{details.type.length}")
+				for type in details.type
+					li(class="type-#{type}")= type
+		- if(details.defaults)
+			span.default= details.defaults
+		p= details.desc
+			- if(details.ref && details.ref.length)
+				for ref in details.ref
+					a(href="##{ref.link}")= ref.name
+		- if(details.valids) 
+			span.valid= details.valids
+		- if(details.details)
+			mixin innertags(details.details, name+'-'+details.name)
+
+mixin outertags(arr)
+	dl.tags
+		- for( var tag in arr)
+			dt= tag
+			- if(tag === 'Usage')
+				pre
+					code= arr[tag].join('\n');
+			- else
+				for tagdetail in arr[tag]
+					dd(id="#{tagdetail.name ? tag+'-'+ tagdetail.name : ''+tag}",class="#{tagdetail.details ? 'extended' : ''}")
+						mixin detail(tagdetail, tag)
+						
+mixin innertags(arr, name)
+	dl
+		for tag,i in arr
+			dd(id="#{tag.name ? name+'-'+ tag.name : ''+name}",class="#{tag.details ? 'extended' : ''}")
+				mixin detail(tag, name)
+
+#content
+	h1
+		span #{self.item.scope ? self.item.scope+'.' : ''}
+		| #{self.item.name}
+	strong #{self.item.type} #{self.item.visibility ? '('+self.item.visibility+')' : ''}, #{self.file}
+	h2= self.item.description[0]
+	- self.item.description.shift()
+	p= self.item.description.join(' ');
+	
+	if self.item.deps
+		dl.dependencies
+			dt Dependencies
+			for dep in self.item.deps
+				dd= dep
+	mixin outertags(self.item.tags)

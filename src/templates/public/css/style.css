@@ -175,3 +175,9 @@ aside {
 	float: left;
 	width: 220px;
 }
+#content {
+	float: left;
+	margin-left: 30px;
+	width: 600px;
+}
+}

@@ -1,0 +1,1116 @@
+{
+	"name": "tabtree",
+	"type": "widget",
+	"scope": "ui",
+	"description": [
+		"Generates a Tab Control UI or an accordion",
+		"Depending on the Options you can create a classic tab Control Interface,",
+		"where you click on a tab to show a panel, or you can create an accordion."
+	],
+	"deps": [
+		" ui.a11y.ext.js"
+	],
+	"tags": {
+		"Options": [
+			{
+				"name": "buttonSel",
+				"desc": "the selector for the button",
+				"ref": [],
+				"type": [
+					"string"
+				],
+				"defaults": "'a'"
+			},
+			{
+				"name": "panelSel",
+				"desc": "the selector for the panel. if false, the panel will be identified by href of the button",
+				"ref": [
+					"buttonSel"
+				],
+				"type": [
+					"boolean",
+					"string"
+				],
+				"defaults": "false"
+			},
+			{
+				"name": "focusOnExpand",
+				"desc": "states if the panel should be focused on expand",
+				"ref": [],
+				"type": [
+					"boolean"
+				],
+				"defaults": "true"
+			},
+			{
+				"name": "focusSel",
+				"desc": "a possible selector for the element to be focused",
+				"ref": [
+					"focusOnExpand"
+				],
+				"type": [
+					"boolean",
+					"string"
+				],
+				"defaults": "true"
+			},
+			{
+				"name": "createPanelWrapper",
+				"desc": "creates a div around the panel if true",
+				"ref": [],
+				"type": [
+					"boolean"
+				],
+				"defaults": "false"
+			},
+			{
+				"name": "toggleButton",
+				"desc": "if false a button can only open a panel, if true it can also close them",
+				"ref": [],
+				"type": [
+					"boolean"
+				],
+				"defaults": "false"
+			},
+			{
+				"name": "multiSelectable",
+				"desc": "if true, more than just one panel can be opened at a time",
+				"ref": [],
+				"type": [
+					"boolean"
+				],
+				"defaults": "false"
+			},
+			{
+				"name": "createPanelTabRelation",
+				"desc": "if true, the panels are labelled by the corresponding button",
+				"ref": [],
+				"type": [
+					"boolean"
+				],
+				"defaults": "false"
+			},
+			{
+				"name": "selectEvents",
+				"desc": "the event which opens (or closes) a panel",
+				"ref": [],
+				"type": [
+					"string"
+				],
+				"defaults": "'ariaclick'"
+			},
+			{
+				"name": "bindStyle",
+				"desc": "['bind', 'live'] the way the event should be listened to",
+				"ref": [],
+				"type": [
+					"string"
+				],
+				"defaults": "'bind'"
+			},
+			{
+				"name": "bindContext",
+				"desc": "the context for the eventBinding (only relevant for live)",
+				"ref": [
+					"bindStyle"
+				],
+				"type": [
+					"boolean",
+					"string",
+					"HTMLNode",
+					"jQuery"
+				],
+				"defaults": "false"
+			},
+			{
+				"name": "defaultSelected",
+				"desc": "the index of the default selected panel",
+				"ref": [],
+				"type": [
+					"number"
+				],
+				"defaults": "0"
+			},
+			{
+				"name": "slideShow",
+				"desc": "if true, the tabs are switched automatically",
+				"ref": [],
+				"type": [
+					"boolean"
+				],
+				"defaults": "false"
+			},
+			{
+				"name": "restartSlideShow",
+				"desc": "if true the (possible) slideshow restarts",
+				"ref": [],
+				"type": [
+					"boolean"
+				],
+				"defaults": "true"
+			},
+			{
+				"name": "activeButtonClass",
+				"desc": "the class the tab gets if selected",
+				"ref": [],
+				"type": [
+					"string"
+				],
+				"defaults": "'js-selected'"
+			},
+			{
+				"name": "activePanelClass",
+				"desc": "the class the panel gets if selected",
+				"ref": [],
+				"type": [
+					"string"
+				],
+				"defaults": "'js-expanded'"
+			},
+			{
+				"name": "handleDisplay",
+				"desc": "[true, false, 'initial'] should the display be handled by the widget, initial means handling it only on init",
+				"ref": [],
+				"type": [
+					"boolean",
+					"string"
+				],
+				"defaults": "true"
+			},
+			{
+				"name": "hideStyle",
+				"desc": "['visibility', 'display'] the way the panels are hidden and shown",
+				"ref": [
+					"handleDisplay"
+				],
+				"type": [
+					"string"
+				],
+				"defaults": "'display'"
+			},
+			{
+				"name": "interceptClick",
+				"desc": "if true clicks on the tab are being prevented",
+				"ref": [],
+				"type": [
+					"boolean"
+				],
+				"defaults": "true"
+			},
+			{
+				"name": "addAria",
+				"desc": "if true aria-attributes are added to the tab and panel",
+				"ref": [],
+				"type": [
+					"boolean"
+				],
+				"defaults": "true"
+			}
+		],
+		"Events": [
+			{
+				"name": "init",
+				"desc": "",
+				"ref": [
+					"ui"
+				],
+				"type": [
+					"object"
+				]
+			},
+			{
+				"name": "expand",
+				"desc": "",
+				"ref": [
+					"ui"
+				],
+				"type": [
+					"object"
+				],
+				"details": [
+					{
+						"name": "button",
+						"desc": "the button that gets opened",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "panel",
+						"desc": "the panel that gets opened",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "collapseElements",
+						"desc": "only exists if not multiSelectable",
+						"ref": [],
+						"type": [
+							"object"
+						],
+						"details": [
+							{
+								"name": "button",
+								"desc": "the button that gets closed",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							},
+							{
+								"name": "panel",
+								"desc": "the panel that gets closed",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "expandinit",
+				"desc": "",
+				"ref": [
+					"ui"
+				],
+				"type": [
+					"object"
+				],
+				"details": [
+					{
+						"name": "button",
+						"desc": "the button that gets opened",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "panel",
+						"desc": "the panel that gets opened",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "collapseElements",
+						"desc": "only exists if not multiSelectable",
+						"ref": [],
+						"type": [
+							"object"
+						],
+						"details": [
+							{
+								"name": "button",
+								"desc": "the button that gets closed",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							},
+							{
+								"name": "panel",
+								"desc": "the panel that gets closed",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "collapse",
+				"desc": "",
+				"ref": [
+					"ui"
+				],
+				"type": [
+					"object"
+				],
+				"details": [
+					{
+						"name": "button",
+						"desc": "the button that gets closed",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "panel",
+						"desc": "the panel that gets closed",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "expandElements",
+						"desc": "only exists if not multiSelectable",
+						"ref": [],
+						"type": [
+							"object"
+						],
+						"details": [
+							{
+								"name": "button",
+								"desc": "the button that gets opened",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							},
+							{
+								"name": "panel",
+								"desc": "the panel that gets opened",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "collapseinit",
+				"desc": "",
+				"ref": [
+					"ui"
+				],
+				"type": [
+					"object"
+				],
+				"details": [
+					{
+						"name": "button",
+						"desc": "the button that gets closed",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "panel",
+						"desc": "the panel that gets closed",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "expandElements",
+						"desc": "only exists if not multiSelectable",
+						"ref": [],
+						"type": [
+							"object"
+						],
+						"details": [
+							{
+								"name": "button",
+								"desc": "the button that gets opened",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							},
+							{
+								"name": "panel",
+								"desc": "the panel that gets opened",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				"name": "beforeexpand",
+				"desc": "",
+				"ref": [
+					"ui"
+				],
+				"type": [
+					"object"
+				],
+				"details": [
+					{
+						"name": "button",
+						"desc": "the button that gets opened",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "panel",
+						"desc": "the panel that gets opened",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "collapseElements",
+						"desc": "only exists if not multiSelectable",
+						"ref": [],
+						"type": [
+							"object"
+						],
+						"details": [
+							{
+								"name": "button",
+								"desc": "the button that gets closed",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							},
+							{
+								"name": "panel",
+								"desc": "the panel that gets closed",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							}
+						]
+					}
+				]
+			}
+		],
+		"Properties": [
+			{
+				"name": "buttons",
+				"desc": "a jQuery collection of the tabs",
+				"ref": [],
+				"type": [
+					"jQuery"
+				]
+			},
+			{
+				"name": "panels",
+				"desc": "a jQuery collection of the panels",
+				"ref": [],
+				"type": [
+					"jQuery"
+				]
+			},
+			{
+				"name": "selectedIndexes",
+				"desc": "the indices of the open tabs/panels",
+				"ref": [],
+				"type": [
+					"Array"
+				]
+			}
+		],
+		"Usage": [
+			" $(elm).tabtree( options );"
+		]
+	},
+	"functions": [
+		{
+			"name": "_createPanelAPI",
+			"type": "function",
+			"visibility": "private",
+			"description": [
+				"creates the data-objects on the elements",
+				"tabtreepanel on the panel and tabtreebutton on the button"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "button",
+						"desc": "a button to create an API on",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "panel",
+						"desc": "a panel to create an API on",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "_create",
+			"type": "function",
+			"visibility": "private",
+			"description": [
+				"creates the widget"
+			]
+		},
+		{
+			"name": "getPrevNext",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"gets the next panel and button in the specified direction",
+				"reiterates over the array (e.g. selects last if current is first and direction is -1)"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "dir",
+						"desc": "[-1, 1] reflects the change of the index",
+						"ref": [],
+						"type": [
+							"number"
+						]
+					}
+				]
+			},
+			"returns": [
+				{
+					"name": "",
+					"desc": "the button and the panel found",
+					"ref": [],
+					"type": [
+						"object"
+					],
+					"details": [
+						{
+							"name": "button",
+							"desc": "the button found in the specified direction",
+							"ref": [],
+							"type": [
+								"jQuery"
+							]
+						},
+						{
+							"name": "panel",
+							"desc": "the panel found in the specified direction",
+							"ref": [],
+							"type": [
+								"jQuery"
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "showPrevNext",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"shows the next panel and button in the specified direction @see getPrevNext"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "dir",
+						"desc": "[-1, 1] reflects the change of the index",
+						"ref": [],
+						"type": [
+							"number"
+						]
+					}
+				]
+			},
+			"returns": [
+				{
+					"name": "",
+					"desc": "the button and the panel found",
+					"ref": [],
+					"type": [
+						"object"
+					],
+					"details": [
+						{
+							"name": "button",
+							"desc": "the button found in the specified direction",
+							"ref": [],
+							"type": [
+								"jQuery"
+							]
+						},
+						{
+							"name": "panel",
+							"desc": "the panel found in the specified direction",
+							"ref": [],
+							"type": [
+								"jQuery"
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "toggle",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"toggles the state of the button"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "button",
+						"desc": "the button to toggle",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "e",
+						"desc": "the original Event that caused the action",
+						"ref": [],
+						"type": [
+							"Event"
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "selectIndexes",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"sets the selectedIndexes to the specified values"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "indexes",
+						"desc": "the indices of open tabs",
+						"ref": [],
+						"type": [
+							"number",
+							"array"
+						]
+					},
+					{
+						"name": "e",
+						"desc": "the original Event that caused the action",
+						"ref": [],
+						"type": [
+							"Event"
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "collapse",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"collapses the specified panel"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "button",
+						"desc": "the tab which should be closed",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "e",
+						"desc": "the Event that caused the action",
+						"ref": [],
+						"type": [
+							"Event"
+						]
+					},
+					{
+						"name": "_panel*",
+						"desc": "the panel which should be closed",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "_opener*",
+						"desc": "if not multiSelectable the elements which should be opened",
+						"ref": [],
+						"type": [
+							"object"
+						],
+						"details": [
+							{
+								"name": "panel",
+								"desc": "the panel to be opened",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							},
+							{
+								"name": "button",
+								"desc": "the button to be opened",
+								"ref": [],
+								"type": [
+									"jQuery"
+								]
+							}
+						]
+					}
+				]
+			},
+			"returns": [
+				{
+					"name": "",
+					"desc": "the object of closed panels/buttons",
+					"ref": [],
+					"type": [
+						"object"
+					],
+					"details": [
+						{
+							"name": "button",
+							"desc": "the button that gets closed",
+							"ref": [],
+							"type": [
+								"jQuery"
+							]
+						},
+						{
+							"name": "panel",
+							"desc": "the panel that gets closed",
+							"ref": [],
+							"type": [
+								"jQuery"
+							]
+						},
+						{
+							"name": "expandElements",
+							"desc": "only exists if not multiSelectable",
+							"ref": [],
+							"type": [
+								"object"
+							],
+							"details": [
+								{
+									"name": "button",
+									"desc": "the button that gets opened",
+									"ref": [],
+									"type": [
+										"jQuery"
+									]
+								},
+								{
+									"name": "panel",
+									"desc": "the panel that gets opened",
+									"ref": [],
+									"type": [
+										"jQuery"
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "addIndex",
+			"type": "[function",
+			"visibility": "public",
+			"description": [
+				"adds an index to selectIndexes @see selectIndexes"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "index",
+						"desc": "the index to add",
+						"ref": [],
+						"type": [
+							"number"
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "removeIndex",
+			"type": "[function",
+			"visibility": "public",
+			"description": [
+				"removes an index to selectIndexes @see selectIndexes"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "index",
+						"desc": "the index to remove",
+						"ref": [],
+						"type": [
+							"number"
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "expand",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"expands the specified panel"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "button",
+						"desc": "the tab which should be expanded",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "e",
+						"desc": "the Event that caused the action",
+						"ref": [],
+						"type": [
+							"Event"
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "collapseAll",
+			"type": "[function",
+			"visibility": "public",
+			"description": [
+				"collapses all open Panels"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "e",
+						"desc": "the Event that caused the action",
+						"ref": [],
+						"type": [
+							"Event"
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "getButtons",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"gets the button to the specified Panels"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "panel",
+						"desc": "the panel we want the button from",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					}
+				]
+			},
+			"returns": [
+				{
+					"name": "",
+					"desc": "the button found",
+					"ref": [],
+					"type": [
+						"jQuery"
+					]
+				}
+			]
+		},
+		{
+			"name": "getPanel",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"gets the panel to the specified button"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "button",
+						"desc": "the button we want the panel from",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					}
+				]
+			},
+			"returns": [
+				{
+					"name": "",
+					"desc": "the panel found",
+					"ref": [],
+					"type": [
+						"jQuery"
+					]
+				}
+			]
+		},
+		{
+			"name": "setState",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"sets the button and panel to the specified state"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "button",
+						"desc": "the button to set the state on",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "panel",
+						"desc": "the panel to set the state on",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					},
+					{
+						"name": "state",
+						"desc": "['active', 'inactive'] the state to set",
+						"ref": [],
+						"type": [
+							"string"
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "focusPanel",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"focuses the specified panel"
+			],
+			"tags": {
+				"Parameter": [
+					{
+						"name": "panel",
+						"desc": "the panel to focus",
+						"ref": [],
+						"type": [
+							"jQuery"
+						]
+					}
+				]
+			}
+		},
+		{
+			"name": "ui",
+			"type": "function",
+			"visibility": "public",
+			"description": [
+				"returns the important things of the widget"
+			],
+			"returns": [
+				{
+					"name": "",
+					"desc": "the UI",
+					"ref": [],
+					"type": [
+						"object"
+					],
+					"details": [
+						{
+							"name": "instance",
+							"desc": "the instance of this widget",
+							"ref": [],
+							"type": [
+								"object"
+							]
+						},
+						{
+							"name": "panels",
+							"desc": "a jQuery collection of all panels",
+							"ref": [],
+							"type": [
+								"jQuery"
+							]
+						},
+						{
+							"name": "buttons",
+							"desc": "a jQuery collection of all buttonSel",
+							"ref": [],
+							"type": [
+								"jQuery"
+							]
+						},
+						{
+							"name": "selectedIndexes",
+							"desc": "an Array containing selected Indexes",
+							"ref": [],
+							"type": [
+								"Array"
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}{
+	"name": "getTabID",
+	"type": "function",
+	"visibility": "private",
+	"description": [
+		"gets the id of jElm. if jElm has no id, it generates one"
+	],
+	"tags": {
+		"Parameter": [
+			{
+				"name": "jElm",
+				"desc": "the element to get the id from",
+				"ref": [],
+				"type": [
+					"jquery"
+				]
+			}
+		]
+	},
+	"returns": [
+		{
+			"name": "",
+			"desc": "the id of the element",
+			"ref": [],
+			"type": [
+				"string"
+			]
+		}
+	]
+}

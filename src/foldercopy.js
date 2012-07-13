@@ -47,7 +47,7 @@ var foldercopy = {
 				if(o_O) {
 					console.log(o_O); return;
 				}
-				console.log('copied '+file+' to '+dest);
+				//console.log('copied '+file+' to '+dest);
 			});
 		});
 	}

@@ -17,12 +17,31 @@ var tags = {
 	},
 	'-': function( obj, line, inherit ) {
 		var item;
+		var result;
 		line = line.trim();
+		
+		function checkReferences(refarr) {
+			for(var i = 0, len = refarr.length; i < len; i++) {
+				if(!~refarr[i].indexOf('-')) {
+					refarr[i] = lastTag+'-'+refarr[i];
+				}
+				refarr[i] = {
+					link: refarr[i],
+					name: refarr[i].substring(refarr[i].lastIndexOf('-')+1, refarr[i].length)
+				};
+			}
+			return refarr;
+		}
+		
 		if ( line[0] !== '-' ) {
 			if ( inherit ) {
-				obj.push( optionParamLine( line ) );
+				result = optionParamLine( line );
+				result.ref = checkReferences(result.ref);
+				obj.push( result );
 			} else {
-				obj.tags[lastTag].push( optionParamLine( line ) );
+				result = optionParamLine( line );
+				result.ref = checkReferences(result.ref);
+				obj.tags[lastTag].push( result );
 			}
 		} else {
 			item = inherit ? obj[obj.length - 1] : obj.tags[lastTag][obj.tags[lastTag].length - 1];
@@ -101,4 +120,4 @@ exports.parseLine = function( obj, line ) {
 	var tag = line[0];
 	line = line.substring( 1, line.length );
 	tags[tag]( obj, line );
-}
+};

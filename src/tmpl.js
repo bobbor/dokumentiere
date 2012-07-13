@@ -20,18 +20,25 @@ var tmpl = {
 		
 		for( var prop in obj) {
 			if ( obj.hasOwnProperty( prop ) ) {
-				this.items( obj[prop], index);
+				this.items( obj[prop], prop, index);
 			}
 		}
 		
 		fc.recursiveCopy(['css', 'img'], ['templates','public'], out);
 	},
 	index: function(arr) {
-		this.render('index', { index: arr }, this.writeHTML);
+		var that = this;
+		this.render('index', { index: arr }, function() {
+			that.writeHTML.apply(that, arguments);
+		});
 	},
-	items: function( arr, index) {
+	items: function( arr, file, index) {
+		var that = this;
 		for( var i = 0, len = arr.length; i < len; i++) {
-			this.render('module', { index: index, item: arr[i]}, this.writeHTML);
+			//process.std	out.write(JSON.stringify(arr[i], null, '\t'));
+			this.render('module', { index: index, item: arr[i], file: file}, function() {
+				that.writeHTML.apply(that, arguments);
+			});
 		}
 	},
 	render: function(tmplName, data, callback) {
@@ -48,10 +55,11 @@ var tmpl = {
 	writeHTML: function(html, name) {
 		fs.writeFile(cwd+path.sep+this.out+path.sep+name+'.html', html, 'utf8', function(err) {
 			if(err) {
-				console.log('could not document '+name+'.html');
+				console.log('could not document '+name+'.html, because: ');
+				console.log(err);
 				return;
 			}
-			console.log('documented '+name+'.html');
+			//console.log('documented '+name+'.html');
 		});
 	}
 };
