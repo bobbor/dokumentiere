@@ -5,10 +5,9 @@ html
 		link(rel="stylesheet",href="css/style.css",media="all")
 	body
 		#wrapper
-			header
-				h1
-					em Aperto
-					span
-						b JS
-						| Bausteine
-					strong Dokumentation
+			include partials/header
+			#main
+				aside.items
+					include partials/filter
+					include partials/items.jade
+				include partials/content.jade
