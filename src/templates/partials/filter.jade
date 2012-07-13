@@ -1,0 +1,17 @@
+#filter
+	form
+		.col.col-1
+			input(type="search",placeholder="Suche",name="filter")
+			button
+				span Los
+		.col.col-2
+			ul.props
+				li
+					input#widget(type="checkbox",name="widgets",checked)
+					label(for="widget") widgets
+				li
+					input#fn(type="checkbox",name="functions",checked)
+					label(for="fn") functions
+				li
+					input#plug(type="checkbox",name="plugins",checked)
+					label(for="plug") plugins
