@@ -65,7 +65,7 @@ var tmpl = {
 				console.log(err);
 				return;
 			}
-			console.log('documented '+name+'.html');
+			//console.log('documented '+name+'.html');
 		});
 	}
 };

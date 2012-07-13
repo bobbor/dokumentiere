@@ -3,6 +3,7 @@ var parseLine = require( './tags' ).parseLine;
 var tmpl = require( './tmpl' );
 
 var doku = {
+	version: '0.2.0',
 	parse: function( files, out ) {
 		var doku = this;
 		var raw = {};

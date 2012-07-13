@@ -16,7 +16,7 @@ var
 
 
 program
-	.version('0.1.1')
+	.version(doku.version)
 	.option('-f, --files <files>', 'which files to document', list, './')
 	.option('-o, --out <outFolder>', 'the folder to put the files to', 'out')
 	.option('-e, --exclude <files>', 'which files to exclude', list, [''])
