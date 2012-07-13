@@ -19,13 +19,19 @@ textarea {
 }
 
 #wrapper {
-	width: 1000px;
-	margin: 30px auto 50px;
+    @include box-sizing(border-box);
+
+    padding: 0 0 0 220px;
+    margin: 30px auto 50px;
+	width: 90%;
+
+
 	/*position: absolute;*/
 	/*top: 0;*/
 	/*left: 0;*/
 	/*bottom: 0;*/
 }
+
 .col {
 	margin-right: 20px;
 	margin-bottom: 20px;
