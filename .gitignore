@@ -3,3 +3,5 @@ node_modules
 .settings
 examples
 out
+.idea
+.sass-cache
