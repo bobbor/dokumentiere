@@ -11,32 +11,38 @@ var tmpl = {
 	generate: function( obj, out ) {
 		this.out = out;
 		var index = [];
+		var types = [];
 		for( var prop in obj) {
 			if ( obj.hasOwnProperty( prop ) ) {
 				index = index.concat( obj[prop] );
+				for(var i = 0, file = obj[prop], len = file.length; i < len; i++) {
+					if(!~types.indexOf(file[i].type)) {
+						types.push(file[i].type);
+					}
+				}
 			}
 		}
-		this.index(index);
+		this.index(index, types);
 		
 		for( var prop in obj) {
 			if ( obj.hasOwnProperty( prop ) ) {
-				this.items( obj[prop], prop, index);
+				this.items( obj[prop], prop, index, types);
 			}
 		}
 		
 		fc.recursiveCopy(['css', 'img'], ['templates','public'], out);
 	},
-	index: function(arr) {
+	index: function(arr, types) {
 		var that = this;
-		this.render('index', { index: arr }, function() {
+		this.render('index', { index: arr, types: types }, function() {
 			that.writeHTML.apply(that, arguments);
 		});
 	},
-	items: function( arr, file, index) {
+	items: function( arr, file, index, types) {
 		var that = this;
 		for( var i = 0, len = arr.length; i < len; i++) {
-			//process.std	out.write(JSON.stringify(arr[i], null, '\t'));
-			this.render('module', { index: index, item: arr[i], file: file}, function() {
+			//process.stdout.write(JSON.stringify(arr[i], null, '\t'));
+			this.render('module', {index: index, item: arr[i], file: file, types: types}, function() {
 				that.writeHTML.apply(that, arguments);
 			});
 		}
@@ -49,7 +55,7 @@ var tmpl = {
 				filename: name,
 				self: true
 			});
-			callback(fn(data), (data.item && data.item.name) || 'index');
+			callback(fn(data), data.item ? ((data.item.scope || data.item.visibility)+'.'+(data.item && data.item.name)) : 'index');
 		});
 	},
 	writeHTML: function(html, name) {
@@ -59,7 +65,7 @@ var tmpl = {
 				console.log(err);
 				return;
 			}
-			//console.log('documented '+name+'.html');
+			console.log('documented '+name+'.html');
 		});
 	}
 };
