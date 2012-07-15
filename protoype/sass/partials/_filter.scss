@@ -1,0 +1,46 @@
+#filter {
+	overflow: hidden;
+	position: relative;
+
+	.col-1 {
+		background-color: white;
+		position: relative;
+	}
+
+	input[type="search"] {
+		border: none;
+		padding: 5px 28px 5px 8px;
+		width: 220px;
+		-moz-box-sizing: border-box;
+		-o-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	button {
+		position: absolute;
+		right: 5px;
+		top: 0;
+		bottom: 0;
+		margin: auto 0;
+		text-indent: -9999em;
+		background: url(../img/icons/lens.png) center no-repeat;
+		width: 20px;
+	}
+
+	ul {
+		color: white;
+		list-style: none;
+		overflow: hidden;
+	}
+
+	li {
+		background-color:#036;
+		float: left;
+		padding: 6px 15px;
+	}
+
+	aside & li {
+		float: none;
+	}
+
+}

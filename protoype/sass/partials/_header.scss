@@ -1,0 +1,48 @@
+header {
+	display: block;
+	margin-bottom: 20px;
+
+	h1 {
+		font-family: Consolas, monospace;
+		position: relative;
+	}
+
+	em {
+		background: transparent url(../img/icons/aperto.png) left top no-repeat scroll;
+		text-indent: -9999em;
+		overflow: hidden;
+		display: block;
+		height: 9px;
+		width: 52px;
+		margin-bottom: 2px;
+	}
+
+	span {
+		font-size: 36px;
+		color: #036;
+		display: block;
+		line-height: 1.4em;
+		overflow: hidden;
+		letter-spacing: -0.07em;
+
+		b {
+			background: url(../img/bgs/js.png) left top no-repeat;
+			color: white;
+			line-height: 1.2em;
+			padding: 5px 9px 4px 7px;
+			float: left;
+			margin-right: 5px;
+		}
+	}
+
+	strong {
+		position: absolute;
+		left: 59px;
+		bottom: 0;
+		font-size: 14px;
+		line-height: 1em;
+		color: #666;
+		font-weight: 100;
+	}
+	
+}

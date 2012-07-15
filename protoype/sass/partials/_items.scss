@@ -1,0 +1,46 @@
+.items {
+
+	overflow: auto;
+	
+	.col {
+		float: none;
+		display: inline-block;
+	}
+
+	section {
+		@include box-sizing(border-box);
+		padding: 10px;
+		background-color: white;
+		color: $medgrey;
+	}
+	
+	section h1 a {
+		color: $blue;
+		font-size: 18px;
+		text-decoration: none;
+		
+		&:hover {
+			text-decoration: underline;
+		}
+		
+		&:focus {
+			outline: 2px solid $blue;
+		}
+		
+		&:active {
+			color: white;
+			background-color: $blue;
+		}
+	}
+	
+	section h2,
+	section p {
+		font-size: 14px;
+		font-weight: 100;
+	}
+
+	section h2 {
+		margin-bottom: 10px;
+	}
+
+}
