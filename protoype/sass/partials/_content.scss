@@ -37,11 +37,10 @@
 		dd.extended dd {
 			border-bottom: 1px dashed $medgrey;
 			padding: 5px 0;
-			
 			@extend .col-wrapper;
-			
 			b, ul, span, > p {
 				@extend .col-2;
+				margin-bottom: 5px;
 			}
 		}
 		dd.extended {
@@ -51,6 +50,9 @@
 				clear: both;
 				background-color: rgba(128,0,255,0.15);
 				padding: 5px 10px;
+				float: left;
+				@include box-sizing(border-box);
+				width: 100%;
 			}
 			dd {
 				border-color: #eee;
