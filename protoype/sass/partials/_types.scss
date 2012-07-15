@@ -1,0 +1,50 @@
+$values: #f80 jQuery #eee,
+	#f08 boolean #eee,
+	#80f string #eee,
+	#8f0 number #333,
+	#08f object #eee,
+	#0f8 HTMLNode #333,
+	#888 Array #eee;
+
+ul.types {
+	overflow: hidden;
+	
+	li {
+		@include box-sizing(border-box);
+		float: left;
+		width: 50%;
+		padding: 3px 2px;
+		text-align: center;
+		&:first-child {
+			@include border-top-left-radius(5px);
+		}
+		&:nth-child(2) {
+			@include border-top-right-radius(5px);
+		}
+		&:nth-last-child(2) {
+			@include border-bottom-left-radius(5px);
+		}
+		&:last-child {
+			@include border-bottom-right-radius(5px);
+			&:first-child {
+				@include border-top-right-radius(5px);
+			}
+		}
+	}
+	
+	&.types-odd li:last-child {
+		width: 100%;
+		@include border-bottom-left-radius(5px);
+	}
+}
+
+@each $pair in  $values {
+	$bg: nth($pair,1);
+	$name: nth($pair,2);
+	$color: nth($pair,3);
+	
+	li.type-#{$name} {
+		background-color: $bg;
+		color: $color;
+	}
+}

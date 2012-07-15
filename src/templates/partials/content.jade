@@ -1,17 +1,17 @@
 mixin detail(details, name)
 	b= details.name
 	- if(details.type && 'length' in details.type)
-		ul(class="types types-#{details.type.length}")
+		ul(class="types types-#{details.type.length % 2 ? 'odd' : 'even'}")
 			for type in details.type
-				li(class="type-#{type}")= type
+				li(class="type-#{type.toLowerCase()}")= type.toLowerCase()
+	p= details.desc
+		- if(details.ref && details.ref.length)
+			for ref in details.ref
+				a(href="##{ref.link}") #{' '+ref.name}
 	- if(details.defaults)
 		span.default= details.defaults
 	- else 
 		span.default
-	p= details.desc
-		- if(details.ref && details.ref.length)
-			for ref in details.ref
-				a(href="##{ref.link}")= ref.name
 	- if(details.valids) 
 		span.valid= details.valids
 	- if(details.details)
@@ -39,7 +39,7 @@ mixin innertags(arr, name)
 	h1
 		span #{self.item.scope ? self.item.scope+'.' : ''}
 		| #{self.item.name}
-	strong #{self.item.type} #{self.item.visibility ? '('+self.item.visibility+')' : ''}, #{self.file}
+	strong #{self.item.type}#{self.item.visibility ? ' ('+self.item.visibility+')' : ''}, #{self.file}
 	h2= self.item.description[0]
 	- self.item.description.shift()
 	p= self.item.description.join(' ');

@@ -28,7 +28,7 @@ textarea {
 }
 
 .col-wrapper {
-	float: left;
+	overflow: hidden;
 }
 .col {
 	margin-right: 20px;
@@ -59,3 +59,4 @@ aside {
 }
 
 @import "partials/content";
+@import "partials/types";
