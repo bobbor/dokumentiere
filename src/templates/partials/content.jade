@@ -1,19 +1,21 @@
 mixin detail(details, name)
 	b= details.name
-		- if(details.type && 'length' in details.type)
-			ul(class="types types-#{details.type.length}")
-				for type in details.type
-					li(class="type-#{type}")= type
-		- if(details.defaults)
-			span.default= details.defaults
-		p= details.desc
-			- if(details.ref && details.ref.length)
-				for ref in details.ref
-					a(href="##{ref.link}")= ref.name
-		- if(details.valids) 
-			span.valid= details.valids
-		- if(details.details)
-			mixin innertags(details.details, name+'-'+details.name)
+	- if(details.type && 'length' in details.type)
+		ul(class="types types-#{details.type.length}")
+			for type in details.type
+				li(class="type-#{type}")= type
+	- if(details.defaults)
+		span.default= details.defaults
+	- else 
+		span.default
+	p= details.desc
+		- if(details.ref && details.ref.length)
+			for ref in details.ref
+				a(href="##{ref.link}")= ref.name
+	- if(details.valids) 
+		span.valid= details.valids
+	- if(details.details)
+		mixin innertags(details.details, name+'-'+details.name)
 
 mixin outertags(arr)
 	dl.tags

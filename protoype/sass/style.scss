@@ -3,6 +3,7 @@
 @import "compass/utilities/sprites";
 
 @import "defs/vars";
+@import "defs/mixins";
 
 * {
 	margin: 0;
@@ -25,10 +26,10 @@ textarea {
 	margin: 30px auto 50px;
 	width: 980px;
 }
-#item #wrapper {
-	padding: 0 0 0 220px;
-}
 
+.col-wrapper {
+	float: left;
+}
 .col {
 	margin-right: 20px;
 	margin-bottom: 20px;
@@ -38,6 +39,7 @@ textarea {
 
 @for $i from 1 through $col_count {
 	.col-#{$i} {
+		@extend .col;
 		width: ($steg*$i + $gap*($i - 1))*1px;
 	}
 }
@@ -47,22 +49,13 @@ textarea {
 @import "partials/filter";
 @import "partials/items";
 
-#item {
-	.items {
-		position: static;
-		bottom: auto;
-		left: auto;
-		right: auto;
-		top: auto;
-	}
-	
-	.items .col {
-		margin-right: 0;
-	}
-
-}
-
 aside {
 	float: left;
 	width: 220px;
+	margin-left: -220px;
 }
+#item #main {
+	padding-left: 220px;
+}
+
+@import "partials/content";

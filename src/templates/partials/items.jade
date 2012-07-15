@@ -1,5 +1,5 @@
 for item in self.index
-	section.col.col-1(data-type="#{item.type}",data-name="#{item.name}")
+	section.col.col-3(data-type="#{item.type}",data-name="#{item.name}")
 		h1
 			a(href="#{((item.scope || item.visibility)+'.'+(item && item.name))}.html")= item.name
 		h2 #{item.type} (#{item.scope || item.visibility})

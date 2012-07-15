@@ -1,0 +1,73 @@
+#content {
+	padding-left: 100px;
+	font-size: 13px;
+	
+	h1 {
+		font-size: 30px;
+		color: $blue;
+		line-height: 1;
+		
+		span {
+			display: block;
+			font-size: 13px;
+			color: $medgrey;
+		}
+	}
+	
+	> strong {
+		color: $medgrey;
+	}
+	
+	h2 {
+		@include headline;
+	}
+	
+	dl {
+		@extend .col-wrapper;
+		dt {
+			@include headline;
+		}
+		
+		&.dependencies dd {
+			float: left;
+			margin-right: 10px;
+		}
+		
+		&.tags > dd,
+		&.tags > dd.extended dd {
+			border-bottom: 1px dashed $medgrey;
+			padding: 5px 0;
+			
+			@extend .col-wrapper;
+			
+			b, ul, span, > p {
+				@extend .col-2;
+			}
+		}
+		
+		dd.extended {
+			border-bottom: none;
+			
+			& dl {
+				border-top: 1px dashed $medgrey;
+			}
+		}
+		
+		dd.functions {
+			padding-left: 20px;
+			padding-top: 0;
+			border-bottom: none;
+			
+			> dl > dt {
+				margin-top: 15px;
+			}
+			dt {
+				@include headline2;
+			}
+			b, ul, span, > p {
+				margin-right: 15px;
+			}
+		}
+	}
+}
+

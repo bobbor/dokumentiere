@@ -1,0 +1,20 @@
+@mixin headline {
+	color: $darkgrey;
+	font: {
+		size: 16px;
+		weight: bold;
+	}
+	margin-top: 20px;
+	letter-spacing: -0.07em;
+}
+
+@mixin headline2 {
+	color: $darkgrey;
+	font: {
+		size: 16px;
+		weight: normal;
+	}
+	text-decoration: underline;
+	margin-top: 20px;
+	letter-spacing: -0.07em;
+}
