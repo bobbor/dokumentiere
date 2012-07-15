@@ -18,7 +18,7 @@
 		color: $medgrey;
 	}
 	
-	h2 {
+	h2,h3 {
 		@include headline;
 	}
 	
@@ -65,19 +65,28 @@
 		
 		
 		dd.functions {
-			padding-left: 20px;
 			padding-top: 0;
 			border-bottom: none;
 			
 			> dl > dt {
-				margin-top: 15px;
-			}
-			dt {
 				@include headline2;
+				border-top: 1px solid $medgrey;
+				padding-top: 5px;
+			}
+			> dl > dd {
+				border-left: 2px solid #f80;
+				padding-left: 10px;
 			}
 			b, ul, span, > p {
 				margin-right: 15px;
 			}
+		}
+		
+		pre {
+			color: white;
+			background-color: $darkgrey;
+			padding: 10px 0 10px 20px;
+			margin-top: 10px;
 		}
 	}
 }

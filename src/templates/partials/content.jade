@@ -1,5 +1,5 @@
 mixin detail(details, name)
-	b= details.name
+	b !{details.name}
 	- if(details.type && 'length' in details.type)
 		ul(class="types types-#{details.type.length % 2 ? 'odd' : 'even'}")
 			for type in details.type
@@ -17,23 +17,66 @@ mixin detail(details, name)
 	- if(details.details)
 		mixin innertags(details.details, name+'-'+details.name)
 
-mixin outertags(arr)
+mixin outertags(arr, fns, ret)
 	dl.tags
 		- for( var tag in arr)
-			dt= tag
-			- if(tag === 'Usage')
-				pre
-					code= arr[tag].join('\n');
-			- else
+			- if(tag !== 'Usage')
+				dt(id="#{tag}")= tag
 				for tagdetail in arr[tag]
 					dd(id="#{tagdetail.name ? tag+'-'+ tagdetail.name : ''+tag}",class="#{tagdetail.details ? 'extended' : ''}")
 						mixin detail(tagdetail, tag)
-						
+		if ret
+			dt(id="Returns") Returns
+				for item,i in ret
+					dd(id="#{item.name ? 'Returns-'+ item.name : 'Returns-'+i}",class="#{item.details ? 'extended' : ''}")
+						mixin detail(item, 'Returns')
+		if fns
+			dt#Functions Functions
+			dd.functions
+				mixin functions(fns)
+		- if (arr && arr.Usage)
+			mixin use(arr.Usage)
 mixin innertags(arr, name)
 	dl
 		for tag,i in arr
 			dd(id="#{tag.name ? name+'-'+ tag.name : ''+name}",class="#{tag.details ? 'extended' : ''}")
 				mixin detail(tag, name)
+
+mixin functions(fns)
+	dl
+		- for( var i = 0; i < fns.length; i++)
+			dt(id="function-#{fns[i].name}") #{fns[i].name +' ('+fns[i].visibility+')'}
+			dd
+				h4= fns[i].description[0]
+				- fns[i].description.shift()
+				p= fns[i].description.join(' ')
+				mixin outertags(fns[i].tags)
+
+				
+mixin toc(tags, fns, ret)
+	h3 Inhalt
+	ol
+		if tags
+			- for( var tag in tags)
+				- if(tag !== 'Usage')
+					li
+						a(href="##{tag}")= tag
+		if fns
+			li
+				a(href="#Functions") Functions
+		if ret 
+			li
+				a(href="#Returns") Returns
+		
+		if tags 
+			if tags.Usage
+				li
+					a(href="#Usage") Usage
+
+mixin use(usage)
+	dt#Usage Usage
+	pre
+		code= usage.join('\n');
 
 #content
 	h1
@@ -49,4 +92,6 @@ mixin innertags(arr, name)
 			dt Dependencies
 			for dep in self.item.deps
 				dd= dep
-	mixin outertags(self.item.tags)
+				
+	mixin toc(self.item.tags, self.item.functions, self.item.returns)
+	mixin outertags(self.item.tags, self.item.functions, self.item.returns)

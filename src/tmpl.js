@@ -41,7 +41,7 @@ var tmpl = {
 	items: function( arr, file, index, types) {
 		var that = this;
 		for( var i = 0, len = arr.length; i < len; i++) {
-			//process.stdout.write(JSON.stringify(arr[i], null, '\t'));
+			//process.stdout.write(JSON.stringify(arr[i], null, ' '));
 			this.render('module', {index: index, item: arr[i], file: file, types: types}, function() {
 				that.writeHTML.apply(that, arguments);
 			});

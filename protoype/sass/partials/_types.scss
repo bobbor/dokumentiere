@@ -1,10 +1,13 @@
-$values: #f80 jquery #eee,
+$values:#f80 jquery #eee,
 	#f08 boolean #eee,
 	#80f string #eee,
 	#8f0 number #333,
 	#08f object #eee,
 	#0f8 htmlnode #333,
-	#888 array #eee;
+	#888 array #eee,
+	#f00 regexp #eee,
+	#00f function #eee,
+	#0f0 event #333;
 
 ul.types {
 	overflow: hidden;

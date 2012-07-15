@@ -9,12 +9,12 @@
 }
 
 @mixin headline2 {
-	color: $darkgrey;
+	color: $blue;
 	font: {
 		size: 16px;
 		weight: normal;
 	}
-	text-decoration: underline;
-	margin-top: 20px;
+	margin-top: 10px;
 	letter-spacing: -0.07em;
+	margin-bottom: 10px;
 }

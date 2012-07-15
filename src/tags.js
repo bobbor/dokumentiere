@@ -81,12 +81,17 @@ var tags = {
 var optionParamLine = function( line, avoidName ) {
 	var vals = line.split( ' ' );
 	var typeRE = /\((\s{0,}[\S\s]{0,}\s{0,})\)/;
-	var defaultRE = /\<(\S+)\>/;
+	var defaultRE = /\<([\S\s]+)\>/;
 	var validRE = /\[([\S\s]+)\]/;
 	var see = /\@see/;
 	var inref = false;
+	var name = !avoidName ? vals.shift() : '';
+	
+	if(name && name.lastIndexOf('*') === name.length-1) {
+		name = name.replace(/([\S]+)\*$/, '<i>(opt.)</i> $1');
+	}
 	var ret = {
-		name: !avoidName ? vals.shift() : '',
+		name: name,
 		desc: [],
 		ref: []
 	};
