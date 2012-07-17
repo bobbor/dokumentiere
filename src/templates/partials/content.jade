@@ -52,8 +52,7 @@ mixin functions(fns)
 					p
 						for ref in fns[i].description[0].ref
 							a(href="##{ref.link}") #{ref.name}
-				- fns[i].description.shift()
-				- for(var j =0; j < fns[i].description.length; j++)
+				- for(var j = 1; j < fns[i].description.length; j++)
 					p= fns[i].description[j].desc
 						if fns[i].description[j].ref
 							for ref in fns[i].description[j].ref
@@ -91,10 +90,16 @@ mixin use(usage)
 		span #{self.item.scope ? self.item.scope+'.' : ''}
 		| #{self.item.name}
 	strong #{self.item.type}#{self.item.visibility ? ' ('+self.item.visibility+')' : ''}, #{self.file}
-	h2= self.item.description[0]
-	- self.item.description.shift()
-	p= self.item.description.join(' ');
-	
+	h2= self.item.description[0].desc
+	if self.item.description[0].ref
+		p
+			for ref in self.item.description[0].ref
+				a(href="##{ref.link}") #{ref.name}
+	- for(var j = 1; j < self.item.description.length; j++)
+		p= self.item.description[j].desc
+			if self.item.description[j].ref
+				for ref in self.item.description[j].ref
+					a(href="##{ref.link}") #{ref.name}
 	if self.item.deps
 		dl.dependencies
 			dt Dependencies

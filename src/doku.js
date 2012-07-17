@@ -1,13 +1,43 @@
+//
+// /--------------------------------------------\
+// |                                            |
+// | doku.js                                    |
+// | part of "dokumentiere"                     |
+// | licensed under GPLv2                       |
+// |                                            |
+// \--------------------------------------------/
+
 var fs = require( 'fs' );
 var parseLine = require( './tags' ).parseLine;
 var tmpl = require( './tmpl' );
 
+/*-
+ * doku
+ [ node-module (node) ]
+ * starts documentation on the files
+ > Properties
+ - version (string) <'0.2.0'> the version of the module
+ > Usage
+ | var doku = require('doku');
+ -*/
 var doku = {
 	version: '0.2.0',
+	/*-
+	 * parse
+	 [ function (public) ]
+	 * parses the passed files
+	 * iterates over the files, starts the file-parser, and starts the markup-generation when done. @see function-parseFile
+	 > Parameter
+	 - files (array) the array of file-path's to document
+	 - out (string) the folder to output to
+	 -*/
 	parse: function( files, out ) {
 		var doku = this;
 		var raw = {};
 		
+		/* 
+		 * inner iteration function
+		 */ 
 		var iterate = function( arr ) {
 			if ( !arr.length ) {
 				tmpl.generate( raw, out);
@@ -25,6 +55,16 @@ var doku = {
 		
 		iterate( files );
 	},
+	/*-
+	 * parseFile
+	 [ function (public) ]
+	 * parses a single file
+	 * greps all the comments and calls the commentparser for each comment @see function-parseComment
+	 > Parameter
+	 - text (string) the string to parse ( in most cases the content of a file)
+	 - fileName* (string) the name of the file to parse
+	 = (array) an array holding the comments
+	 -*/
 	parseFile: function( text, fileName ) {
 		var parsedText = text.replace( /\r\n/gm, '\n' ).replace( /\t/g, '' );
 		var comment = [];
@@ -33,6 +73,7 @@ var doku = {
 		var t, i, len;
 		var inComment = false;
 		parsedText = parsedText.split( '\n' );
+
 		for(i = 0, len = parsedText.length; i < len; i++) {
 			t = parsedText[i].trim();
 			if ( t.indexOf( '-*/' ) === 0 ) {
@@ -49,6 +90,7 @@ var doku = {
 				inComment = true;
 			}
 		}
+
 		for(i = 0, len = doku.length; i < len; i++) {
 			if ( doku[i].scope ) {
 				ret.push( doku[i] );
@@ -67,6 +109,14 @@ var doku = {
 		}
 		return ret;
 	},
+	/*-
+	 * parseComment
+	 [ function (public) ]
+	 * parses a comment and generates an object for the tags and lines
+	 > Parameter
+	 - comment (string) the comment to parse
+	 = (object) the result of the parsing
+	 -*/
 	parseComment: function( comment ) {
 		var co = {
 			name: comment[0],

@@ -1,6 +1,31 @@
+//
+// /--------------------------------------------\
+// |                                            |
+// | tags.js                                    |
+// | part of "dokumentiere"                     |
+// | licensed under GPLv2                       |
+// |                                            |
+// \--------------------------------------------/
+
 var lastTag = 'generic';
 
+/*-
+ * tags
+ [ node-module (node) ]
+ * this parses the "tags" of each line in a documentation-comment
+ > Usage
+ | var tags = require('tags')
+ -*/
 var tags = {
+	/*-
+	 * tags['*']
+	 [ function (private) ]
+	 * parses all lines beginning with '*'
+	 * '*' means description ( including 'ref' and 'desc')
+	 > Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
 	'*': function( obj, line ) {
 		var desc = {};
 		function adjustReference(refarr) {
@@ -17,16 +42,44 @@ var tags = {
 		desc.ref = adjustReference(desc.ref);
 		obj.description.push( desc );
 	},
+	/*-
+	 * tags['>']
+	 [ function (private) ]
+	 * parses all lines beginning with '>'
+	 * '>' means a tag, all following lines with '-' are associated to it
+	 > Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
 	'>': function( obj, line ) {
 		lastTag = line.trim();
 		obj.tags = obj.tags || {};
 		obj.tags[lastTag] = obj.tags[lastTag] || [];
 		
 	},
+	/*-
+	 * tags['|']
+	 [ function (private) ]
+	 * parses all lines beginning with '|'
+	 * '|' means usage of the documented element
+	 > Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
 	'|': function( obj, line ) {
 		obj.tags[lastTag] = obj.tags[lastTag] || [];
 		obj.tags[lastTag].push( line );
 	},
+	/*-
+	 * tags['-']
+	 [ function (private) ]
+	 * parses all lines beginning with '-'
+	 * '-' means an option and is associated to a tag @see function-tags['>'] function-optionParamLine
+	 > Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 - inherit (boolean) if true, the result is set directly on obj and not on obj.tags[lastTag]
+	 -*/
 	'-': function( obj, line, inherit ) {
 		var item;
 		var result;
@@ -61,6 +114,16 @@ var tags = {
 			tags['-']( item.details, line.substring( 1, line.length ), true );
 		}
 	},
+	/*-
+	 * tags['=']
+	 [ function (private) ]
+	 * parses all lines beginning with '='
+	 * '=' means return values similar to '-'@see function-tags['&#45;'] function-optionParamLine
+	 > Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 - inherit (boolean) if true, the result is set directly on obj and not on obj.returns
+	 -*/
 	'=': function( obj, line, inherit ) {
 		var item;
 		if ( !inherit ) {
@@ -80,16 +143,50 @@ var tags = {
 			tags['=']( item.details, line.substring( 1, line.length ), true );
 		}
 	},
+	/*-
+	 * tags['#']
+	 [ function (private) ]
+	 * parses all lines beginning with '#'
+	 * '#' means dependency
+	 > Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
 	'#': function( obj, line ) {
 		obj.deps = obj.deps || [];
 		obj.deps = obj.deps.concat( line.split( ',' ) );
 	},
+	/*-
+	 * tags['!']
+	 [ function (private) ]
+	 * parses all lines beginning with '!'
+	 * '!' means author
+	 > Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
 	'!': function( obj, line ) {
 		obj.author = obj.author || [];
 		obj.author = obj.author.concat( line.split( ',' ) );
 	}
 };
 
+/*-
+ * optionParamLine
+ [ function (private) ]
+ * parses lines that are "option"-lines
+ * these are usually used in "-" and "="
+ > Parameter
+ - line (string) the line to parse
+ - avoidName (boolean) if true, no name will be set on returned object
+ = (object) the object resulting from parsing the line
+ == name (string) the name of the option ('' if avoidName is true)
+ == desc (array) the description of the option (each item of the array is a line)
+ == ref (array) the references of the option (each item if the array is a ref)
+ == type* (array) an array of possible valid types surrounded by '(' and ')'
+ == defaults* (string) which values are default used - surrounded by '<' and '>'
+ == valids* (string) which values are valid - surrounded by '[' and ']'
+ -*/
 var optionParamLine = function( line, avoidName ) {
 	var vals = line.split( ' ' );
 	var typeRE = /^\(([a-zA-Z0-9\ \|]+)\)/;
@@ -140,7 +237,14 @@ var optionParamLine = function( line, avoidName ) {
 	ret.desc = ret.desc.join( ' ' );
 	return ret;
 };
-
+/*-
+ * parseLine
+ [ function (public) ]
+ * parses the given line
+ > Parameter
+ - obj (object) the object which should be extended with the right property
+ - line (string) the line to comment of the comment given
+ -*/
 exports.parseLine = function( obj, line ) {
 	var tag = line[0];
 	line = line.substring( 1, line.length );

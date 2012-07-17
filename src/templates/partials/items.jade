@@ -3,4 +3,4 @@ for item in self.index
 		h1
 			a(href="#{((item.scope || item.visibility)+'.'+(item && item.name))}.html")= item.name
 		h2 #{item.type} (#{item.scope || item.visibility})
-		p= item.description[0]
+		p= item.description[0].desc

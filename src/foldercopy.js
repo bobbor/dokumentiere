@@ -1,9 +1,26 @@
+//
+// /--------------------------------------------\
+// |                                            |
+// | foldercopy.js                              |
+// | part of "dokumentiere"                     |
+// | licensed under GPLv2                       |
+// |                                            |
+// \--------------------------------------------/
+
 var fs = require( 'fs' );
 var cwd = process.cwd();
 var path = require( 'path' );
 
-path.sep = path.sep || require( 'os' ).platform().indexOf( 'win' ) !== -1 ? '\\' : '/';
-
+/*-
+ * iterator
+ [ function (foldercopy) ]
+ * iterates over an array
+ * during iteration it calls fneach for each element and fnend when iteration is done
+ > Parameter
+ - arr (array) the array to iterate over
+ - fneach (function) the function to call on each item
+ - fnend (function) the function to call when iteration is done
+ -*/
 var iterator = function(arr, fneach, fnend) {
 	if(!arr.length) {
 		fnend();
@@ -13,8 +30,24 @@ var iterator = function(arr, fneach, fnend) {
 	fneach(item);
 	iterator(arr, fneach, fnend);
 };
-
+/*-
+ * foldercopy
+ [ node-module (node) ]
+ * copies specified folders and files from the source-folder to destination-folder
+ > Usage
+ | var fc = require('foldercopy');
+ -*/
 var foldercopy = {
+	/*-
+	 * recursiveCopy
+	 [ function (public) ]
+	 * copies the specified folders
+	 * the function looks in the source folder for the dirs and copies them recursively to the destination
+	 > Parameter
+	 - folders (array) an array of folder names
+	 - p (array) an array of foldernames, that get concatinated using path.sep
+	 - dest (string) the destination folder
+	 -*/
 	recursiveCopy: function( folders, p, dest ) {
 		var that = this;
 		var base = __dirname + path.sep + p.join( path.sep );
@@ -23,6 +56,16 @@ var foldercopy = {
 			that.copyFolder(base, elm, '', dest);
 		});
 	},
+	/*-
+	 * copyFolder
+	 [ function (public) ]
+	 * copies the specified folder
+	 > Parameter
+	 - base (string) the base folder where to look
+	 - folder (string) the name of the folder in "base" to copy
+	 - recurse (string) how deep we have iterated (it gets appended to dest)
+	 - dest (string) the destination folder
+	 -*/
 	copyFolder: function(base, folder, recurse, dest) {
 		var that = this;
 		fs.mkdir(dest+path.sep+folder+path.sep+recurse, function() {
@@ -40,6 +83,15 @@ var foldercopy = {
 			});
 		});
 	},
+	/*-
+	 * copyFile
+	 [ function (public) ]
+	 * copies the specified file
+	 > Parameter
+	 - base (array) the base folder where to look
+	 - file (array) the name of the file in "base" to copy
+	 - dest (string) the destination folder
+	 -*/
 	copyFile: function(base, file, dest) {
 		fs.readFile(base+file, function(err, data) {
 			if(err) { console.log(err); return; }
