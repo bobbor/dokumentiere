@@ -1,13 +1,14 @@
-$values:#f80 jquery #eee,
-	#f08 boolean #eee,
-	#80f string #eee,
-	#8f0 number #333,
-	#08f object #eee,
-	#0f8 htmlnode #333,
-	#888 array #eee,
-	#f00 regexp #eee,
-	#00f function #eee,
-	#0f0 event #333;
+$values://bg-color  //color
+		rgba(15, 103, 161, .8) jquery #fff,
+		rgba(153, 153, 153, .8) boolean #fff,
+		rgba(0, 153, 102, .8) string #fff,
+		rgba(255, 102, 51, .8) number #fff,
+		rgba(153, 153, 255, .8) object #fff,
+		rgba(79, 103, 139, .8) htmlnode #fff,
+		rgba(121, 51, 121, .8) array #fff,
+		rgba(177, 54, 54, .8) regexp #fff,
+		rgba(67, 192, 215, .8) function #fff,
+		rgba(151, 193, 91, .8) event #fff;
 
 ul.types {
 	//overflow: hidden;
@@ -18,6 +19,8 @@ ul.types {
 		float: left;
 		width: 50%;
 		padding: 3px 2px;
+		text-shadow: 0 0 4px rgba(0, 0, 0, 0.28);
+		font-weight: bold;
 		text-align: center;
 		&:first-child {
 			@include border-top-left-radius(5px);
@@ -36,9 +39,14 @@ ul.types {
 		}
 	}
 	
-	&.types-odd li:last-child {
-		width: 100%;
-		@include border-bottom-left-radius(5px);
+	&.types-odd li {
+	       &:last-child {
+				width: 100%;
+				@include border-bottom-left-radius(5px);
+	       }
+			&:nth-last-child(2) {
+				@include border-bottom-left-radius(0px);
+			}
 	}
 }
 

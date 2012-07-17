@@ -47,6 +47,7 @@
 				margin-bottom: 0;
 				vertical-align: top;
 			}
+			
 			ul {
 				vertical-align: baseline;			
 			}
@@ -59,13 +60,14 @@
 
 			dl {
 			    @include box-sizing(border-box);
+				@include box-shadow(inset 0 -1px 2px -1px rgba(0, 0, 0, 0.25), 0 1px 0 rgba(255,255,255,.9));
 				border-top: 0 none;
 				clear: both;
 				margin: 10px 0 0;
 				padding: 5px 10px;
 				float: left;
 				width: 100%;
-				background-color: rgba(128,0,255,0.15);
+				background-color: rgba(153, 153, 255, 0.25);
 				
 				.js-on & {
 					display: none;
@@ -86,7 +88,7 @@
 
 			> .types > li {
 			    position: relative;
-				@include box-shadow(inset 0 -7px 0 rgba(0, 0, 0, 0.5) );
+				@include box-shadow(inset 0 -7px 0 rgba(0, 0, 0, 0.3) );
 				cursor: pointer;
 				padding-bottom: 10px;
 
@@ -105,7 +107,7 @@
 
 			&.open > .types {
 
-				@include box-shadow(0 1.0769em 0 rgba(128, 0, 255, 0.15));
+				@include box-shadow(0 1.0769em 0 rgba(153, 153, 255, 0.25));
 
 				> li:after {
 					content: '\25B2'; //25B2 (UP) // 25BC (DOWN)
