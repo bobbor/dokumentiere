@@ -3,11 +3,11 @@ mixin detail(details, name)
 	- if(details.type && 'length' in details.type)
 		ul(class="types types-#{details.type.length % 2 ? 'odd' : 'even'}")
 			for type in details.type
-				li(class="type-#{type.toLowerCase()}")= type.toLowerCase()
+				li(class="type-#{type.toLowerCase().trim()}")= type.toLowerCase().trim()
 	p= details.desc
 		- if(details.ref && details.ref.length)
 			for ref in details.ref
-				a(href="##{ref.link}") #{' '+ref.name}
+				a(href="##{ref.link}") #{ref.name}
 	- if(details.defaults)
 		span.default= details.defaults
 	- else 
@@ -47,10 +47,18 @@ mixin functions(fns)
 		- for( var i = 0; i < fns.length; i++)
 			dt(id="function-#{fns[i].name}") #{fns[i].name +' ('+fns[i].visibility+')'}
 			dd
-				h4= fns[i].description[0]
+				h4= fns[i].description[0].desc
+				if fns[i].description[0].ref
+					p
+						for ref in fns[i].description[0].ref
+							a(href="##{ref.link}") #{ref.name}
 				- fns[i].description.shift()
-				p= fns[i].description.join(' ')
-				mixin outertags(fns[i].tags)
+				- for(var j =0; j < fns[i].description.length; j++)
+					p= fns[i].description[j].desc
+						if fns[i].description[j].ref
+							for ref in fns[i].description[j].ref
+								a(href="##{ref.link}") #{ref.name}
+				mixin outertags(fns[i].tags, null, fns[i].returns)
 
 				
 mixin toc(tags, fns, ret)

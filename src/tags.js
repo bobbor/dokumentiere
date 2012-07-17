@@ -2,8 +2,20 @@ var lastTag = 'generic';
 
 var tags = {
 	'*': function( obj, line ) {
+		var desc = {};
+		function adjustReference(refarr) {
+			for(var i = 0, len = refarr.length; i < len; i++) {
+				refarr[i] = {
+					name: refarr[i].substring(refarr[i].lastIndexOf('-')+1, refarr[i].length),
+					link: refarr[i]
+				};
+			}
+			return refarr;
+		}
 		obj.description = obj.description || [];
-		obj.description.push( line.trim() );
+		desc = optionParamLine(line.trim(), true);
+		desc.ref = adjustReference(desc.ref);
+		obj.description.push( desc );
 	},
 	'>': function( obj, line ) {
 		lastTag = line.trim();
@@ -80,13 +92,15 @@ var tags = {
 
 var optionParamLine = function( line, avoidName ) {
 	var vals = line.split( ' ' );
-	var typeRE = /\((\s{0,}[\S\s]{0,}\s{0,})\)/;
-	var defaultRE = /\<([\S\s]+)\>/;
-	var validRE = /\[([\S\s]+)\]/;
+	var typeRE = /^\(([a-zA-Z0-9\ \|]+)\)/;
+	var defaultRE = /^\<([\[\ \,\|]{0,}[\S\s]{0,}[\ \,\]\|]{0,})\>/;
+	var validRE = /^\[([\S\s]+)\]/;
 	var see = /\@see/;
 	var inref = false;
 	var name = !avoidName ? vals.shift() : '';
-	
+	var result;
+	vals = vals.join(' ');
+
 	if(name && name.lastIndexOf('*') === name.length-1) {
 		name = name.replace(/([\S]+)\*$/, '<i>(opt.)</i> $1');
 	}
@@ -95,17 +109,23 @@ var optionParamLine = function( line, avoidName ) {
 		desc: [],
 		ref: []
 	};
-	if ( typeRE.test( vals[0] ) ) {
-		ret.type = vals.shift().replace( typeRE, "$1" );
+	if ( typeRE.test( vals ) ) {
+		result = typeRE.exec(vals);
+		ret.type = result[1];
 		ret.type = ret.type.split( '|' );
+		vals = vals.replace(typeRE, '').trim();
 	}
-	if ( defaultRE.test( vals[0] ) ) {
-		ret.defaults = vals.shift().replace( defaultRE, "$1" );
+	if ( defaultRE.test( vals ) ) {
+		result = defaultRE.exec(vals);
+		ret.defaults = result[1];
+		vals = vals.replace(defaultRE, '').trim();
 	}
-	if ( validRE.test( vals[0] ) ) {
-		ret.valids = vals.shift().replace( validRE, "$1" );
-		ret.valids.split( ',' );
+	if ( validRE.test( vals ) ) {
+		result = validRE.exec(vals);
+		ret.valids = result[1];
+		vals = vals.replace(validRE, '').trim();
 	}
+	vals = vals.split(' ');
 	while ( vals.length ) {
 		if ( see.test( vals[0] ) ) {
 			inref = true;
