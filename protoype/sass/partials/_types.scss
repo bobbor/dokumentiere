@@ -10,7 +10,8 @@ $values:#f80 jquery #eee,
 	#0f0 event #333;
 
 ul.types {
-	overflow: hidden;
+	//overflow: hidden;
+	@extend .clearfix;
 	
 	li {
 		@include box-sizing(border-box);

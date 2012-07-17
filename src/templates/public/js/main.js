@@ -11,12 +11,13 @@
 	}
 	
 	function enableExtended() {
-		$('dd.extended').bind('click', function(e) {
-			if($(e.target).is('a')) { return true; }
-			var dd = $(this);
+
+		$('dd.extended .type-object').bind('click', function(e) {
+			var dd = $(this).closest('dd');
 			dd[dd.is('.open') ? 'removeClass' : 'addClass']('open');
 			return false;
 		});
+
 		$('dd.functions dt').bind('click', function() {
 			var dd = $(this).next();
 			dd[dd.is('.open') ? 'removeClass' : 'addClass']('open');

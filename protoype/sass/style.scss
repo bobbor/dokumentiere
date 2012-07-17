@@ -44,6 +44,16 @@ textarea {
 	}
 }
 
+.clearfix {
+	&:before,
+	&:after {
+		display: table;
+		visiblity: hidden;
+		clear: both;
+		content: ' ';
+	}
+}
+
 /* header & logo */
 @import "partials/header";
 @import "partials/filter";
