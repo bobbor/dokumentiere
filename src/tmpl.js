@@ -30,7 +30,7 @@ var tmpl = {
 			}
 		}
 		
-		fc.recursiveCopy(['css', 'img'], ['templates','public'], out);
+		fc.recursiveCopy(['css', 'img', 'js'], ['templates','public'], out);
 	},
 	index: function(arr, types) {
 		var that = this;
