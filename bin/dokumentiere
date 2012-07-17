@@ -12,7 +12,7 @@ var
 	}
 	;
 	
-	path.sep = path.sep || require('os').platform().indexOf('win') !== -1 ? '\\' : '/';
+	path.sep = path.sep || require('os').platform().indexOf('win') !== -1 ? '/' : '/'; //causes problems on osx
 
 
 program
