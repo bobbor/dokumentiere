@@ -28,7 +28,7 @@ textarea {
 }
 
 .col-wrapper {
-	overflow: hidden;
+	@extend .clearfix;
 }
 .col {
 	margin-right: 20px;
