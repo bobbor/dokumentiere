@@ -12,7 +12,7 @@ var
 	}
 	;
 	
-	path.sep = require('os').platform().indexOf('win') !== -1 ? '\\' : '/';
+	path.sep = require('os').platform().indexOf('win') === 0 ? '\\' : '/';
 
 
 program
