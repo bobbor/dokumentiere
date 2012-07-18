@@ -37,8 +37,14 @@
 		&.tags > dd,
 		dd.extended dd {
 		    @extend .col-wrapper;
-			border-bottom: 1px dashed $medgrey;
+			position: relative;
+			border-bottom: 1px dashed #b2a89a;
+			outline-top: 1px;
 			padding: 10px 0;
+
+			&:first-child {
+				@include box-shadow(none);
+			}
 
 			b, ul, span, > p {
 				@extend .col-2;
@@ -52,16 +58,22 @@
 				vertical-align: baseline;			
 			}
 		}
+
+		&.tags > dd {
+			@include box-shadow(0 1px 0 #FFFFFF inset);
+		}
+		&.tags > dt + dd {
+			@include box-shadow(none);
+		}
 	
 		
 		dd.extended {
 			//padding-bottom: 0;
-			
 
 			dl {
 			    @include box-sizing(border-box);
 				@include box-shadow(
-				    0 -2px 4px -4px rgba(0, 0, 0, 0.7) inset,
+				    1px -2px 3px -3px rgba(0, 0, 0, 0.7) inset,
 				    0 1px 1px -1px rgba(255, 255, 255, 0.9),
 				    -1px 0 0 0 rgba(255, 255, 255, 0.3),
 				    1px 0 0 0 rgba(255, 255, 255, 0.5)
@@ -77,14 +89,22 @@
 				.js-on & {
 					display: none;
 				}
+
+				b {
+					margin-right: 10px;
+				}
+
+				dl b {
+					width: 130px;
+				}
 			}
 			
 			.js-on &.open > dl {
-					display: block;
+				display: block;
 			}
 			
 			dd {
-				border-color: #eee;
+				border-color: rgba(0, 0, 0, 0.1);
 			}
 			dd:last-child {
 				border-bottom: none;

@@ -15,7 +15,7 @@
 		$('dd.extended .type-object').bind('click', function(e) {
 			var dd = $(this).closest('dd');
 			dd[dd.is('.open') ? 'removeClass' : 'addClass']('open');
-			return false;
+			e.preventDefault();
 		});
 
 		$('dd.functions dt').bind('click', function() {

@@ -91,15 +91,17 @@ mixin use(usage)
 		| #{self.item.name}
 	strong #{self.item.type}#{self.item.visibility ? ' ('+self.item.visibility+')' : ''}, #{self.file}
 	h2= self.item.description[0].desc
-	if self.item.description[0].ref
+	if self.item.description[0].ref.length
 		p
 			for ref in self.item.description[0].ref
 				a(href="##{ref.link}") #{ref.name}
+	- var desc = [], refs = [];
 	- for(var j = 1; j < self.item.description.length; j++)
-		p= self.item.description[j].desc
-			if self.item.description[j].ref
-				for ref in self.item.description[j].ref
-					a(href="##{ref.link}") #{ref.name}
+		- desc.push(self.item.description[j].desc);refs = refs.concat(self.item.description[j].ref)
+	p= desc.join(' ')
+		if refs
+			for ref in refs
+				a(href="##{ref.link}") #{ref.name}
 	if self.item.deps
 		dl.dependencies
 			dt Dependencies
