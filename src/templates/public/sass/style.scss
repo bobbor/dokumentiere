@@ -24,7 +24,7 @@ textarea {
 #wrapper {
 	@include box-sizing(border-box);
 	margin: 30px auto 50px;
-	width: 980px;
+	width: 90%;
 }
 
 .col-wrapper {
@@ -59,16 +59,18 @@ textarea {
 @import "partials/filter";
 @import "partials/items";
 
-aside {
-	float: left;
-	width: 220px;
-	margin-left: -220px;
-}
-aside section.col {
-	margin-right: 0;
-}
 #item #main {
 	padding-left: 220px;
+	position: relative;
+	aside {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 220px;
+	}
+	aside section.col {
+		margin-right: 0;
+	}
 }
 
 @import "partials/content";

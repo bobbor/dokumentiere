@@ -1,6 +1,7 @@
 #content {
 	padding-left: 100px;
 	font-size: 13px;
+	min-width: 1060px;
 	
 	h1 {
 		font-size: 30px;
@@ -45,7 +46,6 @@
 			&:first-child {
 				@include box-shadow(none);
 			}
-
 			b, ul, span, > p {
 				@extend .col-2;
 				float: none;
@@ -53,9 +53,28 @@
 				margin-bottom: 0;
 				vertical-align: top;
 			}
-			
+			b {
+				padding-left: 30px;
+				margin-left: -30px;
+			}
+			b a {
+				display: none;
+				position: absolute;
+				top: -10px;
+				left: 0px;
+				font-size: 250%;
+				color: black;
+				text-decoration: none;
+			}
+			b:hover a {
+				display: block;
+			}
 			ul {
 				vertical-align: baseline;
+			}
+			
+			p {
+				width: 400px;
 			}
 		}
 
@@ -156,6 +175,12 @@
 				border-top: 1px solid $medgrey;
 				padding-top: 5px;
 				cursor: pointer;
+				position: relative;
+				
+				i {
+					font-size: 75%;
+					color: #777;
+				}
 			}
 			> dl > dd {
 				border-left: 2px solid #f80;
