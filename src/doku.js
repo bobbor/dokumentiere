@@ -35,6 +35,18 @@ var doku = {
 		var doku = this;
 		var raw = {};
 		
+		/*
+		 * clear empty function arrays
+		 */
+		
+		var clearFns = function() {
+			this.forEach(function(elm, i) {
+				if(elm.functions && !elm.functions.length) {
+					delete elm.functions;
+				}
+			});
+		};
+		
 		/* 
 		 * inner iteration function
 		 */ 
@@ -49,6 +61,7 @@ var doku = {
 					throw err;
 				}
 				raw[file.name] = doku.parseFile( content, file.name );
+				clearFns.call(raw[file.name]);
 				iterate( arr );
 			} );
 		};
