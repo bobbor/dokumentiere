@@ -356,8 +356,8 @@ aside #filter li {
 }
 #content dl.tags > dd b,
 #content dl dd.extended dd b {
-  padding-left: 30px;
-  margin-left: -30px;
+  padding-left: 40px;
+  margin-left: -40px;
 }
 #content dl.tags > dd b a,
 #content dl dd.extended dd b a {

@@ -5,7 +5,7 @@ mixin detail(details, name)
 			!{details.name}
 	- else
 		b
-			a(href="##{name}", title="permalink here") &#10173;
+			a(href="##{name}", title="permalink here") &#9884;
 			| &nbsp;
 	- if(details.type && 'length' in details.type)
 		ul(class="types types-#{details.type.length % 2 ? 'odd' : 'even'}")
