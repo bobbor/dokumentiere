@@ -59,4 +59,7 @@ ul.types {
 		background-color: $bg;
 		color: $color;
 	}
+	i.#{$name} {
+		color: $bg;
+	}
 }

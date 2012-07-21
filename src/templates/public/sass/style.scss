@@ -14,6 +14,7 @@
 body {
 	background: #fff url(../img/bgs/bg.png);
 	font: normal normal normal 62.5% / 1.3 $fontFamily;
+	overflow-y: scroll;
 }
 
 input,
@@ -63,10 +64,14 @@ textarea {
 	padding-left: 220px;
 	position: relative;
 	aside {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 220px;
+		position: fixed;
+		left: 5%;
+		top: 30px;
+		width: 14.2%;
+		min-width: 237px;
+		bottom: 0;
+		overflow-x: hidden;
+		overflow-y: scroll;
 	}
 	aside section.col {
 		margin-right: 0;

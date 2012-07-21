@@ -192,8 +192,7 @@ var optionParamLine = function( line, avoidName ) {
 	var typeRE = /^\(([a-zA-Z0-9\ \|]+)\)/;
 	var defaultRE = /^\<([\[\ \,\|]{0,}[\S\s]{0,}[\ \,\]\|]{0,})\>/;
 	var validRE = /^\[([\S\s]+)\]/;
-	var see = /\@see/;
-	var inref = false;
+	var seeRE = /(\@see([\S\s]*))/;
 	var name = !avoidName ? vals.shift() : '';
 	var result;
 	vals = vals.join(' ');
@@ -215,27 +214,84 @@ var optionParamLine = function( line, avoidName ) {
 	if ( defaultRE.test( vals ) ) {
 		result = defaultRE.exec(vals);
 		ret.defaults = result[1];
+		
+		ret.defaults = {
+			raw: ret.defaults,
+			type: keywordChecker(ret.defaults)
+		};
+		
 		vals = vals.replace(defaultRE, '').trim();
 	}
 	if ( validRE.test( vals ) ) {
 		result = validRE.exec(vals);
-		ret.valids = result[1];
+		ret.valids = result[1].split(',');
+		ret.valids = generateValids(ret.valids);
 		vals = vals.replace(validRE, '').trim();
 	}
-	vals = vals.split(' ');
-	while ( vals.length ) {
-		if ( see.test( vals[0] ) ) {
-			inref = true;
-			vals.shift();
-		}
-		if ( inref ) {
-			ret.ref.push( vals.shift() );
-		} else {
-			ret.desc.push( vals.shift() );
-		}
+	if(seeRE.test(vals)) {
+		var ref = seeRE.exec(vals);
+		ret.ref = ref[2].trim().split(' ');
+		vals = vals.replace(ref[1], '');
 	}
-	ret.desc = ret.desc.join( ' ' );
+	ret.desc = codify(vals);
 	return ret;
+};
+
+var codify = function(desc) {
+	desc = desc.split('`');
+	for(var i = 1, len = desc.length; i < len; i+=2) {
+		desc[i] = '<code>'+desc[i]+'</code>';
+	}
+	return desc.join('');
+};
+
+/*-
+ * generateValids(valids)
+ [ function (private) ]
+ * generates all valids with type
+ * walks through the array of valid values and checks the for a keyword @see keywordChecker
+ > Parameter
+ - valids (array) the array of valid values
+ = (object) the map for the value
+ == raw (string) the string of valid value
+ == type (string) the type of which the value is
+ > Usage
+ | var obj = generateValids("['foo', true]");
+ -*/
+var generateValids = function(valids) {
+	return valids.map(function(elm, i) {
+		return {
+			raw: elm,
+			type: keywordChecker(elm)
+		};
+	});
+};
+
+/*-
+ * keywordChecker(text)
+ [ function (private) ]
+ * checks if a string matches a javascript keyword
+ > Parameter
+ - text (string) the string to test for a keyword
+ > Usage
+ | var type = keywordChecker('true'); // returns boolean
+ = (string) returns the type of the string <br/> falls back to "default" if not identified
+ -*/
+var keywordChecker = function(text) {
+	var bool = /true|false/;
+	var string = /^(\'|\")[\S\s]+(\'|\")$/;
+	var number = /[0-9\.]+/;
+	
+	// we start with string, preventing strings ( e.g. "true" ) is not incorrectely interpreted
+	if(string.test(text)) {
+		return 'string';
+	}
+	else if(bool.test(text)) {
+		return 'boolean';
+	} else if(number.test(text)) {
+		return 'number';
+	} 
+	return 'default';
 };
 /*-
  * parseLine

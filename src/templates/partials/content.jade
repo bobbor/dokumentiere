@@ -1,98 +1,11 @@
-mixin detail(details, name)
-	- if(details.name)
-		b
-			a(href="##{name+'-'+details.name}", title="permalink here") &#9884;
-			!{details.name}
-	- else
-		b
-			a(href="##{name}", title="permalink here") &#9884;
-			| &nbsp;
-	- if(details.type && 'length' in details.type)
-		ul(class="types types-#{details.type.length % 2 ? 'odd' : 'even'}")
-			for type in details.type
-				li(class="type-#{type.toLowerCase().trim()}")= type.toLowerCase().trim()
-	p= details.desc
-		- if(details.ref && details.ref.length)
-			for ref in details.ref
-				a(href="##{ref.link}") #{ref.name}
-	- if(details.defaults)
-		span.default= details.defaults
-	- else
-		span.default &nbsp;
-	- if(details.valids) 
-		span.valid= details.valids
-	- else
-		span.valid &nbsp;
-	- if(details.details)
-		mixin innertags(details.details, name+'-'+details.name)
+//- include all mixins
 
-mixin outertags(arr, fns, ret)
-	dl.tags
-		- for( var tag in arr)
-			- if(tag !== 'Usage')
-				dt(id="#{tag}")= tag
-				for tagdetail in arr[tag]
-					dd(id="#{tagdetail.name ? tag+'-'+ tagdetail.name : ''+tag}",class="#{tagdetail.details ? 'extended' : ''}")
-						mixin detail(tagdetail, tag)
-		if ret
-			dt(id="Returns") Returns
-				for item,i in ret
-					dd(id="#{item.name ? 'Returns-'+ item.name : 'Returns-'+i}",class="#{item.details ? 'extended' : ''}")
-						mixin detail(item, 'Returns')
-		if fns
-			dt#Functions Functions
-			dd.functions
-				mixin functions(fns)
-		- if (arr && arr.Usage)
-			mixin use(arr.Usage)
-mixin innertags(arr, name)
-	dl
-		for tag,i in arr
-			dd(id="#{tag.name ? name+'-'+ tag.name : ''+name}",class="#{tag.details ? 'extended' : ''}")
-				mixin detail(tag, name)
-
-mixin functions(fns)
-	dl
-		- for( var i = 0; i < fns.length; i++)
-			dt(id="function-#{fns[i].name}") !{'<i>'+fns[i].visibility+'</i> '+fns[i].name}
-			dd
-				h4= fns[i].description[0].desc
-				if fns[i].description[0].ref
-					p
-						for ref in fns[i].description[0].ref
-							a(href="##{ref.link}") #{ref.name}
-				- for(var j = 1; j < fns[i].description.length; j++)
-					p= fns[i].description[j].desc
-						if fns[i].description[j].ref
-							for ref in fns[i].description[j].ref
-								a(href="##{ref.link}") #{ref.name}
-				mixin outertags(fns[i].tags, null, fns[i].returns)
-
-				
-mixin toc(tags, fns, ret)
-	h3 Inhalt
-	ol
-		if tags
-			- for( var tag in tags)
-				- if(tag !== 'Usage')
-					li
-						a(href="##{tag}")= tag
-		if fns
-			li
-				a(href="#Functions") Functions
-		if ret 
-			li
-				a(href="#Returns") Returns
-		
-		if tags 
-			if tags.Usage
-				li
-					a(href="#Usage") Usage
-
-mixin use(usage)
-	dt#Usage Usage
-	pre
-		code= usage.join('\n');
+include ../mixins/detail
+include ../mixins/innertags
+include ../mixins/outertags
+include ../mixins/functions
+include ../mixins/toc
+include ../mixins/use
 
 #content
 	h1
@@ -107,7 +20,8 @@ mixin use(usage)
 	- var desc = [], refs = [];
 	- for(var j = 1; j < self.item.description.length; j++)
 		- desc.push(self.item.description[j].desc);refs = refs.concat(self.item.description[j].ref)
-	p= desc.join(' ')
+	p
+		| #{desc.join(' ')}
 		if refs
 			for ref in refs
 				a(href="##{ref.link}") #{ref.name}

@@ -1,27 +1,15 @@
 (function( window ) {
 	
 	function checkHash() {
-		if(location.hash) {
-			var elm = $(location.hash);
-			elm.addClass('highlight');
-			window.setTimeout(function() {
-				elm.removeClass('highlight');
-			}, 1000);
-		}
+		require(['jumpLinks'], function(j) {
+			j.enable($('#content a[href^=#]'));
+		});
 	}
 	
 	function enableExtended() {
-
-		$('dd.extended .type-object').bind('click', function(e) {
-			var dd = $(this).closest('dd');
-			dd[dd.is('.open') ? 'removeClass' : 'addClass']('open');
-			return false;
-		});
-
-		$('dd.functions dt').bind('click', function() {
-			var dd = $(this).next();
-			dd[dd.is('.open') ? 'removeClass' : 'addClass']('open');
-			return false;
+		require(['expander'], function(e) {
+			e.extend($('dd.extended .type-object'));
+			e.fns($('dd.functions dt'));
 		});
 	}
 	

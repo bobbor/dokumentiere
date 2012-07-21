@@ -4,12 +4,16 @@ html
 		meta(charset="utf-8")
 		title #{self.item.name} (#{self.item.scope || self.item.visibility}) Dokumentation
 		link(rel="stylesheet",href="css/style.css",media="all")
+		link(rel="stylesheet",href="css/font-awesome.css",media="all")
+		link(rel="stylesheet",href="css/sh.min.css",media="all")
+		script(src="js/sh_main.min.js")
+		script(src="js/sh_javascript.min.js")
 		script(data-main="js/main.js",src="js/libs/require-jquery.js")
-	body#item
+	body#item(onload="sh_highlightDocument();")
 		#wrapper
-			include partials/header
 			#main
 				aside.items
+					include partials/header
 					include partials/filter
-					include partials/items.jade
-				include partials/content.jade
+					include partials/items
+				include partials/content
