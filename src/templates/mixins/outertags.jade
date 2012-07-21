@@ -1,0 +1,19 @@
+mixin outertags(arr, fns, ret)
+	dl.tags
+		- for( var tag in arr)
+			- if(tag !== 'Usage')
+				dt(id="#{tag}")= tag
+				for tagdetail in arr[tag]
+					dd(id="#{tagdetail.name ? tag+'-'+ tagdetail.name : ''+tag}",class="#{tagdetail.details ? 'extended' : ''}")
+						mixin detail(tagdetail, tag)
+		if ret
+			dt(id="Returns") Returns
+				for item,i in ret
+					dd(id="#{item.name ? 'Returns-'+ item.name : 'Returns-'+i}",class="#{item.details ? 'extended' : ''}")
+						mixin detail(item, 'Returns')
+		if fns
+			dt#Functions Functions
+			dd.functions
+				mixin functions(fns)
+		- if (arr && arr.Usage)
+			mixin use(arr.Usage)
