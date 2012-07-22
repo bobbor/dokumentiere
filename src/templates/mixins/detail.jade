@@ -3,11 +3,11 @@ mixin detail(details, name)
 		div.common
 			- if(details.name)
 				h4
-					a.icon-bookmark(href="##{name+'-'+details.name}", title="permalink here")
+					a.icon-hand-right(href="##{name+'-'+details.name}", title="permalink here")
 					!{details.name}
 			- else
 				h4
-					a.icon-bookmark(href="##{name}", title="permalink here")
+					a.icon-hand-right(href="##{name}", title="permalink here")
 					| &nbsp;
 			- if(details.type && 'length' in details.type)
 				ul(class="types types-#{details.type.length % 2 ? 'odd' : 'even'}")

@@ -23,7 +23,7 @@ var tmpl = require( './tmpl' );
 var doku = {
 	version: '0.2.0',
 	/*-
-	 * parse
+	 * parse(files, out)
 	 [ function (public) ]
 	 * parses the passed files
 	 * iterates over the files, starts the file-parser, and starts the markup-generation when done. @see function-parseFile
@@ -38,21 +38,21 @@ var doku = {
 		/*
 		 * clear empty function arrays
 		 */
-		
+
 		var clearFns = function() {
-			this.forEach(function(elm, i) {
-				if(elm.functions && !elm.functions.length) {
+			this.forEach( function( elm, i ) {
+				if ( elm.functions && !elm.functions.length ) {
 					delete elm.functions;
 				}
-			});
+			} );
 		};
 		
-		/* 
+		/*
 		 * inner iteration function
-		 */ 
+		 */
 		var iterate = function( arr ) {
 			if ( !arr.length ) {
-				tmpl.generate( raw, out);
+				tmpl.generate( raw, out );
 				return;
 			}
 			var file = arr.pop();
@@ -61,7 +61,7 @@ var doku = {
 					throw err;
 				}
 				raw[file.name] = doku.parseFile( content, file.name );
-				clearFns.call(raw[file.name]);
+				clearFns.call( raw[file.name] );
 				iterate( arr );
 			} );
 		};
@@ -69,7 +69,7 @@ var doku = {
 		iterate( files );
 	},
 	/*-
-	 * parseFile
+	 * parseFile(text, fileName)
 	 [ function (public) ]
 	 * parses a single file
 	 * greps all the comments and calls the commentparser for each comment @see function-parseComment
@@ -86,7 +86,7 @@ var doku = {
 		var t, i, len;
 		var inComment = false;
 		parsedText = parsedText.split( '\n' );
-
+		
 		for(i = 0, len = parsedText.length; i < len; i++) {
 			t = parsedText[i].trim();
 			if ( t.indexOf( '-*/' ) === 0 ) {
@@ -103,7 +103,7 @@ var doku = {
 				inComment = true;
 			}
 		}
-
+		
 		for(i = 0, len = doku.length; i < len; i++) {
 			if ( doku[i].scope ) {
 				ret.push( doku[i] );
@@ -123,7 +123,7 @@ var doku = {
 		return ret;
 	},
 	/*-
-	 * parseComment
+	 * parseComment(comment)
 	 [ function (public) ]
 	 * parses a comment and generates an object for the tags and lines
 	 > Parameter

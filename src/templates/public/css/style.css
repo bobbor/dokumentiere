@@ -387,9 +387,9 @@ aside #filter li {
 #content dl dd.extended dd h4 a {
   display: none;
   position: absolute;
-  top: -10px;
+  top: -5px;
   left: 0px;
-  font-size: 250%;
+  font-size: 200%;
   color: black;
   text-decoration: none;
 }
@@ -420,6 +420,14 @@ aside #filter li {
   background-color: #eee;
   padding: 0 4px;
   border: 1px solid #aaa;
+}
+#content dl.tags > dd p strong,
+#content dl dd.extended dd p strong {
+  font-weight: bold;
+}
+#content dl.tags > dd p em,
+#content dl dd.extended dd p em {
+  font-style: italic;
 }
 #content dl.tags > dd span,
 #content dl dd.extended dd span {
@@ -554,6 +562,20 @@ aside #filter li {
   display: block;
   float: left;
   line-height: 1.4;
+}
+#content dl dd.functions > dl > dt a {
+  position: absolute;
+  left: -30px;
+  color: black;
+  font-size: 162%;
+  text-decoration: none;
+  top: 0px;
+  display: none;
+  width: 30px;
+  line-height: 1.35;
+}
+#content dl dd.functions > dl > dt:hover a {
+  display: block;
 }
 #content dl dd.functions > dl > dd {
   border-left: 2px solid #f80;

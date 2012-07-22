@@ -9,21 +9,20 @@
 
 var jade = require( 'jade' );
 var cwd = process.cwd();
-var path = require('path');
-var fs = require('fs');
-var fc = require('./foldercopy');
+var path = require( 'path' );
+var fs = require( 'fs' );
+var fc = require( './foldercopy' );
 
 /*-
  * tmpl
  [ node-module (node) ]
  * gets the parsed comments and generates the html
- * shizzle?
  > Usage
  | var tmpl = require('tmpl');
  -*/
 var tmpl = {
 	/*-
-	 * generate
+	 * generate(obj, out)
 	 [ function (public) ]
 	 * iterates over the generated object and generates html for each 
 	 * file and an index file @see function-index function-items
@@ -38,25 +37,25 @@ var tmpl = {
 		for( var prop in obj) {
 			if ( obj.hasOwnProperty( prop ) ) {
 				index = index.concat( obj[prop] );
-				for(var i = 0, file = obj[prop], len = file.length; i < len; i++) {
-					if(!~types.indexOf(file[i].type)) {
-						types.push(file[i].type);
+				for( var i = 0, file = obj[prop], len = file.length; i < len; i++) {
+					if ( !~types.indexOf( file[i].type ) ) {
+						types.push( file[i].type );
 					}
 				}
 			}
 		}
-		this.index(index, types);
+		this.index( index, types );
 		
 		for( var prop in obj) {
 			if ( obj.hasOwnProperty( prop ) ) {
-				this.items( obj[prop], prop, index, types);
+				this.items( obj[prop], prop, index, types );
 			}
 		}
 		
-		fc.recursiveCopy(['css', 'img', 'js'], ['templates','public'], out);
+		fc.recursiveCopy( ['css', 'img', 'js'], ['templates', 'public'], out );
 	},
 	/*-
-	 * index
+	 * index(arr, types)
 	 [ function (public) ]
 	 * generates the index-file @see function-render
 	 * to adjust HTML see index.jade in the templates folder
@@ -64,14 +63,17 @@ var tmpl = {
 	 - arr (array) the array of files documented
 	 - types (array) the array of types of documented elements
 	 -*/
-	index: function(arr, types) {
+	index: function( arr, types ) {
 		var that = this;
-		this.render('index', { index: arr, types: types }, function() {
-			that.writeHTML.apply(that, arguments);
-		});
+		this.render( 'index', {
+			index: arr,
+			types: types
+		}, function() {
+			that.writeHTML.apply( that, arguments );
+		} );
 	},
 	/*-
-	 * items
+	 * items(arr, file, index, types)
 	 [ function (public) ]
 	 * generates the markup for each file @see function-render
 	 * to adjust HTML see module.jade in the templates folder
@@ -81,17 +83,22 @@ var tmpl = {
 	 - index (array) the array of all elements adjusted for index @see function-index
 	 - types (array) an array of all types
 	 -*/
-	items: function( arr, file, index, types) {
+	items: function( arr, file, index, types ) {
 		var that = this;
 		for( var i = 0, len = arr.length; i < len; i++) {
-			//process.stdout.write(JSON.stringify(arr[i], null, ' '));
-			this.render('module', {index: index, item: arr[i], file: file, types: types}, function() {
-				that.writeHTML.apply(that, arguments);
-			});
+			// process.stdout.write(JSON.stringify(arr[i], null, ' '));
+			this.render( 'module', {
+				index: index,
+				item: arr[i],
+				file: file,
+				types: types
+			}, function() {
+				that.writeHTML.apply( that, arguments );
+			} );
 		}
 	},
 	/*-
-	 * render
+	 * render(tmplName, data, callback)
 	 [ function (public) ]
 	 * compiles the data
 	 * passes the data to the jade compiler and calls the given callback with the html
@@ -100,19 +107,21 @@ var tmpl = {
 	 - data (object) the data to compile
 	 - callback (function) the function to call with the html
 	 -*/
-	render: function(tmplName, data, callback) {
-		var name = __dirname+path.sep+'templates'+path.sep+tmplName+'.jade';
-		fs.readFile(name, 'utf8', function(err, content) {
-			if(err) { throw err; }
-			var fn = jade.compile(content, {
+	render: function( tmplName, data, callback ) {
+		var name = __dirname + path.sep + 'templates' + path.sep + tmplName + '.jade';
+		fs.readFile( name, 'utf8', function( err, content ) {
+			if ( err ) {
+				throw err;
+			}
+			var fn = jade.compile( content, {
 				filename: name,
 				self: true
-			});
-			callback(fn(data), data.item ? ((data.item.scope || data.item.visibility)+'.'+(data.item && data.item.name)) : 'index');
-		});
+			} );
+			callback( fn( data ), data.item ? ((data.item.scope || data.item.visibility) + '.' + (data.item && data.item.name)) : 'index' );
+		} );
 	},
 	/*-
-	 * writeHTML
+	 * writeHTML(html, name);
 	 [ function (public) ]
 	 * writes html! simple as that
 	 * writes the given html to the defined path-name
@@ -120,15 +129,15 @@ var tmpl = {
 	 - html (string) the compiled HTML
 	 - name (string) the name of the file to write to
 	 -*/
-	writeHTML: function(html, name) {
-		fs.writeFile(cwd+path.sep+this.out+path.sep+name+'.html', html, 'utf8', function(err) {
-			if(err) {
-				console.log('could not document '+name+'.html, because: ');
-				console.log(err);
+	writeHTML: function( html, name ) {
+		fs.writeFile( cwd + path.sep + this.out + path.sep + name + '.html', html, 'utf8', function( err ) {
+			if ( err ) {
+				console.log( 'could not document ' + name + '.html, because: ' );
+				console.log( err );
 				return;
 			}
-			//console.log('documented '+name+'.html');
-		});
+			// console.log('documented '+name+'.html');
+		} );
 	}
 };
 

@@ -90,9 +90,9 @@
 			h4 a {
 				display: none;
 				position: absolute;
-				top: -10px;
+				top: -5px;
 				left: 0px;
-				font-size: 250%;
+				font-size: 200%;
 				color: black;
 				text-decoration: none;
 			}
@@ -120,6 +120,13 @@
 					background-color: #eee;
 					padding: 0 4px;
 					border: 1px solid #aaa;
+				}
+				
+				strong {
+					font-weight: bold;
+				}
+				em {
+					font-style: italic;
 				}
 			}
 			span {
@@ -259,6 +266,21 @@
 						line-height: 1.4;
 					}
 				}
+				
+				a {
+					position: absolute;
+					left: -30px;
+					color: black;
+					font-size: 162%;
+					text-decoration: none;
+					top: 0px;
+					display: none;
+					width: 30px;
+					line-height: 1.35;
+				}
+			}
+			> dl > dt:hover a {
+				display: block;
 			}
 			> dl > dd {
 				border-left: 2px solid #f80;

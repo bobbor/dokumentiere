@@ -6,8 +6,8 @@ pre.sh_sourceCode {
 }
 
 pre.sh_sourceCode .sh_keyword {
-  color: #000000;
-  font-weight: bold;
+  color: rgba(15, 103, 161, .8);
+  font-weight: normal;
   font-style: normal;
 }
 
@@ -18,13 +18,13 @@ pre.sh_sourceCode .sh_type {
 }
 
 pre.sh_sourceCode .sh_string {
-  color: #006400;
+  color: rgba(0, 153, 102, .8);
   font-weight: normal;
   font-style: normal;
 }
 
 pre.sh_sourceCode .sh_regexp {
-  color: #006400;
+  color: rgba(177, 54, 54, .8);
   font-weight: normal;
   font-style: normal;
 }
@@ -36,13 +36,13 @@ pre.sh_sourceCode .sh_specialchar {
 }
 
 pre.sh_sourceCode .sh_comment {
-  color: #000000;
+  color: #777;
   font-weight: normal;
   font-style: italic;
 }
 
 pre.sh_sourceCode .sh_number {
-  color: #006400;
+  color: rgba(255, 102, 51, .8);
   font-weight: normal;
   font-style: normal;
 }
@@ -60,7 +60,7 @@ pre.sh_sourceCode .sh_symbol {
 }
 
 pre.sh_sourceCode .sh_function {
-  color: #000000;
+  color: rgba(67, 140, 200, 1);
   font-weight: normal;
   font-style: normal;
 }
