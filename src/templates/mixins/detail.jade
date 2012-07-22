@@ -21,11 +21,11 @@ mixin detail(details, name)
 						a.icon-caret-right(href="##{ref.link}") #{ref.name}
 			- if(details.defaults)
 				span.default
-					b Standard
+					b standard
 					i(class="#{details.defaults.type}")= details.defaults.raw
 			- if(details.valids)
 				span.valid
-					b zulässig
+					b möglich
 					for valid,i in details.valids
 						if i !== 0
 							| , 

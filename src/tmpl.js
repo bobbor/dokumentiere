@@ -44,6 +44,7 @@ var tmpl = {
 				}
 			}
 		}
+		
 		this.index( index, types );
 		
 		for( var prop in obj) {

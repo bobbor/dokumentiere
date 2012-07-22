@@ -1,8 +1,8 @@
 {
 	"name": "dokumentiere",
 	"description": "JavaScript documentation generator",
-	"version": "0.4.1",
-	"author": "Philipp Paul <me@philipp-paul.com>",
+	"version": "0.5.0",
+	"author": "bobbor <bobbor.pap@gmail.com>",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/bobbor/dokumentiere.git"

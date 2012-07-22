@@ -21,16 +21,25 @@ include ../mixins/use
 	- var desc = [], refs = [];
 	- for(var j = 1; j < self.item.description.length; j++)
 		- desc.push(self.item.description[j].desc);refs = refs.concat(self.item.description[j].ref)
-	p
-		| #{desc.join(' ')}
-		if refs
-			for ref in refs
-				a(href="##{ref.link}") #{ref.name}
+	- if(desc && refs)
+		p
+			| #{desc.join(' ')}
+			if refs
+				for ref in refs
+					a(href="##{ref.link}") #{ref.name}
+	- if(self.item.warning)
+		.warning
+			p.icon-warning-sign= self.item.warning.join(' ')
 	if self.item.deps
 		dl.dependencies
 			dt Dependencies
 			for dep in self.item.deps
 				dd= dep
-				
+	if self.item.expando
+		dl.supers
+			dt Extends
+			for sup in self.item.expando
+				dd
+					a(href="#{sup}.html")= sup
 	mixin toc(self.item.tags, self.item.functions, self.item.returns)
 	mixin outertags(self.item.tags, self.item.functions, self.item.returns)

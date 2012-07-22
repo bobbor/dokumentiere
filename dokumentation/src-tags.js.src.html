@@ -158,17 +158,43 @@ var tags = {
 		obj.deps = obj.deps.concat( line.split( ',' ) );
 	},
 	/*-
-	 * tags['!'](obj, line)
+	 * tags[':'](obj, line)
 	 [ function (private) ]
-	 * parses all lines beginning with `!`
-	 * `!` means author
+	 * parses all lines beginning with `:`
+	 * `:` means author
 	 &gt; Parameter
 	 - obj (object) the object to set
 	 - line (string) the line to parse
 	 -*/
-	'!': function( obj, line ) {
+	':': function( obj, line ) {
 		obj.author = obj.author || [];
 		obj.author = obj.author.concat( line.split( ',' ) );
+	},
+	/*-
+	 * tags['+'] (obj, line)
+	 [ function (private) ]
+	 * parses all lines beginning with `+`
+	 * `+` means *extends* (could be a widget, or class or whats'o'ever)
+	 &gt; Parameter
+	 - obj (object) the object to set on
+	 - line (string) the line to parse
+	 -*/
+	'+': function(obj, line) {
+		obj.expando = obj.expando || [];
+		obj.expando = obj.expando.concat( line.split( ',' ) );
+	},
+	/*-
+	 * tags['!'](obj, line)
+	 [ function (private) ]
+	 * parses all lines beginning with `!`
+	 * `!` means *warning*
+	 &gt; Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
+	'!': function(obj, line) {
+		obj.warning = obj.warning || [];
+		obj.warning.push( line );
 	}
 };
 
@@ -302,13 +328,13 @@ var generateValids = function( valids ) {
  - text (string) the string to test for a keyword
  &gt; Usage
  | var type = keywordChecker('true'); // returns boolean
- = (string) returns the type of the string &lt;br/&gt; falls back to &quot;default&quot; if not identified
+ = (string) ['string', 'boolean', 'number', 'default'] returns the type of the string &lt;br/&gt; falls back to &quot;default&quot; if not identified
  -*/
 var keywordChecker = function( text ) {
 	var bool = /true|false/;
 	var string = /^(\'|\&quot;)[\S\s]+(\'|\&quot;)$/;
 	var number = /[0-9\.]+/;
-	
+	text = text.trim();
 	// we start with string, preventing strings ( e.g. &quot;true&quot; ) is not incorrectely interpreted
 	if ( string.test( text ) ) {
 		return 'string';
