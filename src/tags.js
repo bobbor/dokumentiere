@@ -242,16 +242,16 @@ var optionParamLine = function( line, avoidName ) {
  * prettify(desc)
  [ function (private) ]
  * transforms `\``, `\*` and `\_`
- * parses the description of a function or module
- * it transforms those to code, strong and em<br/>
+ * parses the description of a function or module<br/>
+ * it transforms those to `code`, `strong` and `em`<br/>
  * \`foo\` == &lt;code&gt;foo&lt;/code&gt;<br/>
  * \*foo\* == &lt;strong&gt;foo&lt;/strong&gt;<br/>
  * \_foo\_ == &lt;em&gt;foo&lt;/strong&gt;
  > Parameter
  - desc (string) the string to parse
- = (string) the codified string
+ = (string) the prettified string
  > Usage
- | var myCodeString = codify(myString); 
+ | var myCodeString = prettify(myString); 
  -*/
 var prettify = function( desc ) {
 	return desc.replace( /\\`/gi, '|code|' ).replace( /\\\*/gi, '|bold|' ).replace( /\\_/gi, '|italic|' ).split( '`' ).map( function( elm, i ) {

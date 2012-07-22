@@ -16,12 +16,12 @@ var tmpl = require( './tmpl' );
  [ node-module (node) ]
  * starts documentation on the files
  > Properties
- - version (string) <'0.2.0'> the version of the module
+ - version (string) <'0.4.0'> the version of the module
  > Usage
  | var doku = require('doku');
  -*/
 var doku = {
-	version: '0.2.0',
+	version: '0.4.0',
 	/*-
 	 * parse(files, out)
 	 [ function (public) ]
