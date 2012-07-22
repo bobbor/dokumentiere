@@ -1,5 +1,11 @@
 (function( window ) {
 	
+	function itemFilter() {
+		require(['filter'], function(filter) {
+			filter.go($('#filter'), $('.items'));
+		});
+	}
+	
 	function checkHash() {
 		require(['jumpLinks'], function(j) {
 			j.enable($('#content a[href^=#]'));
@@ -25,6 +31,7 @@
 			domReady: function( ctx ) {
 				checkHash();
 				enableExtended();
+				itemFilter();
 			}
 		};
 

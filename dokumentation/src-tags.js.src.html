@@ -1,0 +1,335 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>src\tags.js Dokumentation (Source)</title><link rel="stylesheet" href="css/style.css" media="all"><link rel="stylesheet" href="css/font-awesome.css" media="all"><link rel="stylesheet" href="css/sh.min.css" media="all"><script src="js/sh_main.min.js"></script><script src="js/sh_javascript.min.js"></script><script data-main="js/main.js" src="js/libs/require-jquery.js"></script></head><body id="source" onload="sh_highlightDocument();"><div id="wrapper"><div id="main"><aside class="items"><header><h1><a href="index.html"><em>Aperto</em><span><b>JS</b>Bausteine</span><strong>Dokumentation</strong></a></h1></header><div id="filter"><form><div class="col col-3"><input type="search" placeholder="Suche" name="filter"><button><span>Los</span></button></div><div class="col col-9"><ul class="props"><li><input id="node-module" type="checkbox" name="node-module" checked><label for="node-module">node-module</label></li></ul></div></form></div><section data-type="node-module" data-name="doku" class="col col-3"><h1><a href="node.doku.html">doku</a></h1><h2>node-module (node)</h2><p>starts documentation on the files</p></section><section data-type="node-module" data-name="foldercopy" class="col col-3"><h1><a href="node.foldercopy.html">foldercopy</a></h1><h2>node-module (node)</h2><p>copies the specified folder</p></section><section data-type="node-module" data-name="tags" class="col col-3"><h1><a href="node.tags.html">tags</a></h1><h2>node-module (node)</h2><p>this parses the &quot;tags&quot;</p></section><section data-type="node-module" data-name="tmpl" class="col col-3"><h1><a href="node.tmpl.html">tmpl</a></h1><h2>node-module (node)</h2><p>gets the parsed comments and generates the html</p></section></aside><div id="content"><h1> <span>Source View</span>src\tags.js</h1><pre class="sh_javascript">//
+// /--------------------------------------------\
+// |                                            |
+// | tags.js                                    |
+// | part of &quot;dokumentiere&quot;                     |
+// | licensed under GPLv2                       |
+// |                                            |
+// \--------------------------------------------/
+
+var lastTag = 'generic';
+
+/*-
+ * tags
+ [ node-module (node) ]
+ * this parses the &quot;tags&quot;
+ * these are the first symbols of each line in a documentation-comment
+ &gt; Usage
+ | var tags = require('tags')
+ -*/
+var tags = {
+	/*-
+	 * tags['*'](obj, line)
+	 [ function (private) ]
+	 * parses all lines beginning with `\*`
+	 * `\*` means description ( including `ref` and `desc`)
+	 &gt; Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
+	'*': function( obj, line ) {
+		var desc = {};
+		function adjustReference( refarr ) {
+			for( var i = 0, len = refarr.length; i &lt; len; i++) {
+				refarr[i] = {
+					name: refarr[i].substring( refarr[i].lastIndexOf( '-' ) + 1, refarr[i].length ),
+					link: refarr[i]
+				};
+			}
+			return refarr;
+		}
+		obj.description = obj.description || [];
+		desc = optionParamLine( line.trim(), true );
+		desc.ref = adjustReference( desc.ref );
+		obj.description.push( desc );
+	},
+	/*-
+	 * tags['&gt;'](obj, line)
+	 [ function (private) ]
+	 * parses all lines beginning with `&gt;`
+	 * `&gt;` means a tag, all following lines with `-` (or `|` in case of *Usage*) are associated to it
+	 &gt; Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
+	'&gt;': function( obj, line ) {
+		lastTag = line.trim();
+		obj.tags = obj.tags || {};
+		obj.tags[lastTag] = obj.tags[lastTag] || [];
+		
+	},
+	/*-
+	 * tags['|'](obj, line)
+	 [ function (private) ]
+	 * parses all lines beginning with `|`
+	 * `|` means usage of the documented element
+	 &gt; Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
+	'|': function( obj, line ) {
+		obj.tags[lastTag] = obj.tags[lastTag] || [];
+		obj.tags[lastTag].push( line );
+	},
+	/*-
+	 * tags['-'](obj, line, inherit)
+	 [ function (private) ]
+	 * parses all lines beginning with `-`
+	 * `-` means an option and is associated to a tag @see function-tags['&gt;'] function-optionParamLine
+	 &gt; Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 - inherit (boolean) if true, the result is set directly on obj and not on obj.tags[lastTag]
+	 -*/
+	'-': function( obj, line, inherit ) {
+		var item;
+		var result;
+		line = line.trim();
+		
+		function checkReferences( refarr ) {
+			for( var i = 0, len = refarr.length; i &lt; len; i++) {
+				if ( !~refarr[i].indexOf( '-' ) ) {
+					refarr[i] = lastTag + '-' + refarr[i];
+				}
+				refarr[i] = {
+					link: refarr[i],
+					name: refarr[i].substring( refarr[i].lastIndexOf( '-' ) + 1, refarr[i].length )
+				};
+			}
+			return refarr;
+		}
+		
+		if ( line[0] !== '-' ) {
+			if ( inherit ) {
+				result = optionParamLine( line );
+				result.ref = checkReferences( result.ref );
+				obj.push( result );
+			} else {
+				result = optionParamLine( line );
+				result.ref = checkReferences( result.ref );
+				obj.tags[lastTag].push( result );
+			}
+		} else {
+			item = inherit ? obj[obj.length - 1] : obj.tags[lastTag][obj.tags[lastTag].length - 1];
+			item.details = item.details || [];
+			tags['-']( item.details, line.substring( 1, line.length ), true );
+		}
+	},
+	/*-
+	 * tags['='](obj, line, inherit)
+	 [ function (private) ]
+	 * parses all lines beginning with `=`
+	 * `=` means return values similar to `-` @see function-tags['&#45;'] function-optionParamLine
+	 &gt; Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 - inherit (boolean) if true, the result is set directly on obj and not on obj.returns
+	 -*/
+	'=': function( obj, line, inherit ) {
+		var item;
+		if ( !inherit ) {
+			obj.returns = obj.returns || [];
+		}
+		
+		line = line.trim();
+		if ( line[0] !== '=' ) {
+			if ( inherit ) {
+				obj.push( optionParamLine( line ) );
+			} else {
+				obj.returns.push( optionParamLine( line, true ) );
+			}
+		} else {
+			item = inherit ? obj[obj.length - 1] : obj.returns[obj.returns.length - 1];
+			item.details = item.details || [];
+			tags['=']( item.details, line.substring( 1, line.length ), true );
+		}
+	},
+	/*-
+	 * tags['#'](obj, line)
+	 [ function (private) ]
+	 * parses all lines beginning with `#`
+	 * `#` means dependency
+	 &gt; Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
+	'#': function( obj, line ) {
+		obj.deps = obj.deps || [];
+		obj.deps = obj.deps.concat( line.split( ',' ) );
+	},
+	/*-
+	 * tags['!'](obj, line)
+	 [ function (private) ]
+	 * parses all lines beginning with `!`
+	 * `!` means author
+	 &gt; Parameter
+	 - obj (object) the object to set
+	 - line (string) the line to parse
+	 -*/
+	'!': function( obj, line ) {
+		obj.author = obj.author || [];
+		obj.author = obj.author.concat( line.split( ',' ) );
+	}
+};
+
+/*-
+ * optionParamLine(line, avoidName)
+ [ function (private) ]
+ * parses lines that are &quot;option&quot;-lines
+ * these are usually used in `-` and `=`
+ &gt; Parameter
+ - line (string) the line to parse
+ - avoidName (boolean) if true, no name will be set on returned object
+ = (object) the object resulting from parsing the line
+ == name (string) the name of the option ('' if avoidName is true)
+ == desc (array) the description of the option (each item of the array is a line)
+ == ref (array) the references of the option (each item if the array is a ref)
+ == type* (array) an array of possible valid types surrounded by '(' and ')'
+ == defaults* (string) which values are default used - surrounded by '&lt;' and '&gt;'
+ == valids* (string) which values are valid - surrounded by '[' and ']'
+ -*/
+var optionParamLine = function( line, avoidName ) {
+	var vals = line.split( ' ' );
+	var typeRE = /^\(([a-zA-Z0-9\ \|]+)\)/;
+	var defaultRE = /^\&lt;([\[\ \,\|]{0,}[\S\s]{0,}[\ \,\]\|]{0,})\&gt;/;
+	var validRE = /^\[([\S\s]+)\]/;
+	var seeRE = /(\@see([\S\s]*))/;
+	var name = !avoidName ? vals.shift() : '';
+	var result;
+	vals = vals.join( ' ' );
+	
+	if ( name &amp;&amp; name.lastIndexOf( '*' ) === name.length - 1 ) {
+		name = name.replace( /([\S]+)\*$/, '&lt;i&gt;(opt.)&lt;/i&gt; $1' );
+	}
+	var ret = {
+		name: name,
+		desc: [],
+		ref: []
+	};
+	if ( typeRE.test( vals ) ) {
+		result = typeRE.exec( vals );
+		ret.type = result[1];
+		ret.type = ret.type.split( '|' );
+		vals = vals.replace( typeRE, '' ).trim();
+	}
+	if ( defaultRE.test( vals ) ) {
+		result = defaultRE.exec( vals );
+		ret.defaults = result[1];
+		
+		ret.defaults = {
+			raw: ret.defaults,
+			type: keywordChecker( ret.defaults )
+		};
+		
+		vals = vals.replace( defaultRE, '' ).trim();
+	}
+	if ( validRE.test( vals ) ) {
+		result = validRE.exec( vals );
+		ret.valids = result[1].split( ',' );
+		ret.valids = generateValids( ret.valids );
+		vals = vals.replace( validRE, '' ).trim();
+	}
+	if ( seeRE.test( vals ) ) {
+		var ref = seeRE.exec( vals );
+		ret.ref = ref[2].trim().split( ' ' );
+		vals = vals.replace( ref[1], '' );
+	}
+	ret.desc = prettify( vals );
+	return ret;
+};
+
+/*-
+ * prettify(desc)
+ [ function (private) ]
+ * transforms `\``, `\*` and `\_`
+ * parses the description of a function or module
+ * it transforms those to code, strong and em&lt;br/&gt;
+ * \`foo\` == &lt;code&gt;foo&lt;/code&gt;&lt;br/&gt;
+ * \*foo\* == &lt;strong&gt;foo&lt;/strong&gt;&lt;br/&gt;
+ * \_foo\_ == &lt;em&gt;foo&lt;/strong&gt;
+ &gt; Parameter
+ - desc (string) the string to parse
+ = (string) the codified string
+ &gt; Usage
+ | var myCodeString = codify(myString); 
+ -*/
+var prettify = function( desc ) {
+	return desc.replace( /\\`/gi, '|code|' ).replace( /\\\*/gi, '|bold|' ).replace( /\\_/gi, '|italic|' ).split( '`' ).map( function( elm, i ) {
+		if ( i % 2 ) {
+			elm = '&lt;code&gt;' + elm + '&lt;/code&gt;';
+		}
+		return elm;
+	} ).join( '' ).split( '*' ).map( function( elm, i ) {
+		if ( i % 2 ) {
+			elm = '&lt;strong&gt;' + elm + '&lt;/strong&gt;';
+		}
+		return elm;
+	} ).join( '' ).split( '_' ).map( function( elm, i ) {
+		if ( i % 2 ) {
+			elm = '&lt;em&gt;' + elm + '&lt;/em&gt;';
+		}
+		return elm;
+	} ).join( '' ).replace( /\|code\|/gi, '`' ).replace( /\|bold\|/gi, '*' ).replace( /\|italic\|/gi, '_' );
+};
+
+/*-
+ * generateValids(valids)
+ [ function (private) ]
+ * generates all valids with type
+ * walks through the array of valid values and checks the for a keyword @see keywordChecker
+ &gt; Parameter
+ - valids (array) the array of valid values
+ = (object) the map for the value
+ == raw (string) the string of valid value
+ == type (string) the type of which the value is
+ &gt; Usage
+ | var obj = generateValids(&quot;['foo', true]&quot;);
+ -*/
+var generateValids = function( valids ) {
+	return valids.map( function( elm, i ) {
+		return {
+			raw: elm,
+			type: keywordChecker( elm )
+		};
+	} );
+};
+
+/*-
+ * keywordChecker(text)
+ [ function (private) ]
+ * checks if a string matches a javascript keyword
+ &gt; Parameter
+ - text (string) the string to test for a keyword
+ &gt; Usage
+ | var type = keywordChecker('true'); // returns boolean
+ = (string) returns the type of the string &lt;br/&gt; falls back to &quot;default&quot; if not identified
+ -*/
+var keywordChecker = function( text ) {
+	var bool = /true|false/;
+	var string = /^(\'|\&quot;)[\S\s]+(\'|\&quot;)$/;
+	var number = /[0-9\.]+/;
+	
+	// we start with string, preventing strings ( e.g. &quot;true&quot; ) is not incorrectely interpreted
+	if ( string.test( text ) ) {
+		return 'string';
+	} else if ( bool.test( text ) ) {
+		return 'boolean';
+	} else if ( number.test( text ) ) {
+		return 'number';
+	}
+	return 'default';
+};
+/*-
+ * parseLine(obj, line)
+ [ function (public) ]
+ * parses the given line
+ &gt; Parameter
+ - obj (object) the object which should be extended with the right property
+ - line (string) the line to comment of the comment given
+ -*/
+exports.parseLine = function( obj, line ) {
+	var tag = line[0];
+	line = line.substring( 1, line.length );
+	tags[tag]( obj, line );
+};
+</pre></div></div></div></body></html>
