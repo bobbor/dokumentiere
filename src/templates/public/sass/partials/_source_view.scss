@@ -1,0 +1,12 @@
+#source {
+	#content {
+		pre {
+			margin: 20px 0;
+			width: 100%;
+			padding: 20px;
+			@include box-sizing(border-box);
+			border-radius: 5px;
+			@include box-shadow(0 0 5px #888 inset);
+		}
+	}
+}

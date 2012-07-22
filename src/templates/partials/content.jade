@@ -11,7 +11,8 @@ include ../mixins/use
 	h1
 		span #{self.item.scope ? self.item.scope+'.' : ''}
 		| #{self.item.name}
-	strong #{self.item.type}#{self.item.visibility ? ' ('+self.item.visibility+')' : ''}, #{self.file}
+	strong #{self.item.type}#{self.item.visibility ? ' ('+self.item.visibility+')' : ''}, 
+		a(href="#{self.link}")= self.file
 	h2= self.item.description[0].desc
 	if self.item.description[0].ref.length
 		p

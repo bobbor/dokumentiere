@@ -85,12 +85,20 @@ var tmpl = {
 	 -*/
 	items: function( arr, file, index, types ) {
 		var that = this;
+		this.render('src', {
+			index: index,
+			types: types,
+			src: arr.src,
+			name: file
+		}, function() {
+			that.writeHTML.apply(that, arguments);
+		});
 		for( var i = 0, len = arr.length; i < len; i++) {
-			// process.stdout.write(JSON.stringify(arr[i], null, ' '));
 			this.render( 'module', {
 				index: index,
 				item: arr[i],
 				file: file,
+				link: file.replace(new RegExp('\\'+path.sep, 'g'), '-')+'.src.html',
 				types: types
 			}, function() {
 				that.writeHTML.apply( that, arguments );
@@ -117,7 +125,13 @@ var tmpl = {
 				filename: name,
 				self: true
 			} );
-			callback( fn( data ), data.item ? ((data.item.scope || data.item.visibility) + '.' + (data.item && data.item.name)) : 'index' );
+			callback( fn( data ), 
+				data.item
+					? ((data.item.scope || data.item.visibility) + '.' + (data.item && data.item.name))
+					: data.src
+						? data.name.replace(new RegExp('\\'+path.sep, 'g'), '-') + '.src' 
+						: 'index'
+			);
 		} );
 	},
 	/*-

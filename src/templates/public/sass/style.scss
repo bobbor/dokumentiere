@@ -55,12 +55,8 @@ textarea {
 	}
 }
 
-/* header & logo */
-@import "partials/header";
-@import "partials/filter";
-@import "partials/items";
-
-#item #main {
+#item #main,
+#source #main {
 	padding-left: 220px;
 	position: relative;
 	aside {
@@ -77,6 +73,10 @@ textarea {
 		margin-right: 0;
 	}
 }
-
+/* header & logo */
+@import "partials/header";
+@import "partials/filter";
+@import "partials/items";
 @import "partials/content";
 @import "partials/types";
+@import "partials/source_view";

@@ -62,6 +62,7 @@ var doku = {
 				}
 				raw[file.name] = doku.parseFile( content, file.name );
 				clearFns.call( raw[file.name] );
+				raw[file.name].src = content;
 				iterate( arr );
 			} );
 		};

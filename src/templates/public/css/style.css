@@ -147,6 +147,39 @@ textarea {
   content: ' ';
 }
 
+#item #main,
+#source #main {
+  padding-left: 220px;
+  position: relative;
+}
+#item #main aside,
+#source #main aside {
+  position: fixed;
+  left: 5%;
+  top: 30px;
+  width: 14.2%;
+  min-width: 237px;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+#item #main aside section.col, #item #main aside section.col-1, #item #main aside section.col-2, #item #main aside section.col-3, #item #main aside section.col-4, #item #main aside section.col-5, #item #main aside section.col-6, #item #main aside section.col-7, #item #main aside section.col-8, #item #main aside section.col-9, #item #main aside section.col-10, #item #main aside section.col-11, #item #main aside section.col-12,
+#source #main aside section.col,
+#source #main aside section.col-1,
+#source #main aside section.col-2,
+#source #main aside section.col-3,
+#source #main aside section.col-4,
+#source #main aside section.col-5,
+#source #main aside section.col-6,
+#source #main aside section.col-7,
+#source #main aside section.col-8,
+#source #main aside section.col-9,
+#source #main aside section.col-10,
+#source #main aside section.col-11,
+#source #main aside section.col-12 {
+  margin-right: 0;
+}
+
 /* header & logo */
 header {
   display: block;
@@ -272,24 +305,6 @@ aside #filter li {
 }
 .items section h2 {
   margin-bottom: 10px;
-}
-
-#item #main {
-  padding-left: 220px;
-  position: relative;
-}
-#item #main aside {
-  position: fixed;
-  left: 5%;
-  top: 30px;
-  width: 14.2%;
-  min-width: 237px;
-  bottom: 0;
-  overflow-x: hidden;
-  overflow-y: scroll;
-}
-#item #main aside section.col, #item #main aside section.col-1, #item #main aside section.col-2, #item #main aside section.col-3, #item #main aside section.col-4, #item #main aside section.col-5, #item #main aside section.col-6, #item #main aside section.col-7, #item #main aside section.col-8, #item #main aside section.col-9, #item #main aside section.col-10, #item #main aside section.col-11, #item #main aside section.col-12 {
-  margin-right: 0;
 }
 
 #content {
@@ -749,4 +764,17 @@ li.type-event {
 
 i.event {
   color: rgba(151, 193, 91, 0.8);
+}
+
+#source #content pre {
+  margin: 20px 0;
+  width: 100%;
+  padding: 20px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 0 5px #888888 inset;
+  -moz-box-shadow: 0 0 5px #888888 inset;
+  box-shadow: 0 0 5px #888888 inset;
 }
