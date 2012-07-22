@@ -2,14 +2,26 @@
 
 ## a node.js module for documentation
 
-it has not yet a npmjs-repository, so the only way to install is to download the `.tar.gz` and install it that way.
+## Installation
 
-	npm -g install dokumentiere.tar.gz
+	npm -g install dokumentiere
 	
-after that you can use it via commandline. to know what options are available use:
+## Usage
 
 	dokumentiere -h
+
+	-f, --files   : tells which files to document, can be folders, scans those recursively
+	-o, --out     : tells where to to put the documentation to
+	-e, --exclude : tells which files, folders to exclude, recursively
 	
+---
+		
+### See it in Action.
+
+the source of this project is documented using dokumentiere. 
+you can browse the documentation (including the source) on:
+http://bobbor.github.com/dokumentiere
+
 ---
 
 Let's jump right in
@@ -125,11 +137,3 @@ Instead it is followed by vertical lines, which are transformed to code-examples
 		 -*/
 		 
 and with `-*/` you end the documentation block.
-		
-### Customization
-
-You have a lot of freedom when it comes to the Parameter and the the return-types. But when you
-want to add new `">"`-Statements or you want to add a new `[ ... ]` because the predefined do 
-not fit your needs.
-
-how to and what rules to obey, you can read this later, when the source is written.
