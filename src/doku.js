@@ -14,6 +14,7 @@ var tmpl = require( './tmpl' );
 /*-
  * doku
  [ node-module (node) ]
+ : bobbor
  * starts documentation on the files
  > Properties
  - version (string) <'0.5.0'> the version of the module
@@ -62,7 +63,7 @@ var doku = {
 				}
 				raw[file.name] = doku.parseFile( content, file.name );
 				clearFns.call( raw[file.name] );
-				raw[file.name].src = content;
+				raw[file.name].src = content.replace( /\r\n/gm, '\n' ).split('\n');
 				iterate( arr );
 			} );
 		};
@@ -87,12 +88,12 @@ var doku = {
 		var t, i, len;
 		var inComment = false;
 		parsedText = parsedText.split( '\n' );
-		
+		var beginningLine = 0;
 		for(i = 0, len = parsedText.length; i < len; i++) {
 			t = parsedText[i].trim();
 			if ( t.indexOf( '-*/' ) === 0 ) {
 				if ( inComment ) {
-					doku.push( this.parseComment( comment ) );
+					doku.push( this.parseComment( comment, beginningLine+1 ) );
 					comment = [];
 				}
 				inComment = false;
@@ -102,6 +103,7 @@ var doku = {
 			}
 			if ( t.indexOf( '/*-' ) === 0 ) {
 				inComment = true;
+				beginningLine = i;
 			}
 		}
 		
@@ -131,10 +133,11 @@ var doku = {
 	 - comment (string) the comment to parse
 	 = (object) the result of the parsing
 	 -*/
-	parseComment: function( comment ) {
+	parseComment: function( comment, line) {
 		var co = {
 			name: comment[0],
-			type: comment[1]
+			type: comment[1],
+			line: line
 		};
 		function setupType( type ) {
 			type = type.replace( /\[(\s|\s+)([\S\s]+)(\s|\s+)\]/, "$2" ).trim();

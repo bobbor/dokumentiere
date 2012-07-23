@@ -9,5 +9,20 @@
 			@include box-sizing(border-box);
 			@include box-shadow(0 0 5px #888 inset);
 		}
+		a[data-line] {
+			display: block;
+			&.highlight {
+				background-color: #f0f0f0;
+			}
+			&:before {
+				content: attr(data-line) ':';
+				width: 40px;
+				text-align: right;
+				display: inline-block;
+				margin-right: 5px;
+				background-color: #ffe;
+				border: 1px solid #dde;
+			}
+		}
 	}
 }

@@ -16,6 +16,7 @@ var fc = require( './foldercopy' );
 /*-
  * tmpl
  [ node-module (node) ]
+ : bobbor
  * gets the parsed comments and generates the html
  > Usage
  | var tmpl = require('tmpl');

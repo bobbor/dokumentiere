@@ -12,6 +12,7 @@ var lastTag = 'generic';
 /*-
  * tags
  [ node-module (node) ]
+ : bobbor
  * this parses the "tags"
  * these are the first symbols of each line in a documentation-comment
  > Usage

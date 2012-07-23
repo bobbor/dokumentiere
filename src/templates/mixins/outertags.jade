@@ -1,4 +1,4 @@
-mixin outertags(arr, fns, ret, prefix)
+mixin outertags(arr, fns, ret, link, prefix)
 	- prefix = prefix ? prefix+'-' : ''
 	dl.tags
 		- for( var tag in arr)
@@ -15,6 +15,6 @@ mixin outertags(arr, fns, ret, prefix)
 		if fns
 			dt#Functions Functions
 			dd.functions
-				mixin functions(fns)
+				mixin functions(fns, link)
 		- if (arr && arr.Usage)
 			mixin use(arr.Usage)

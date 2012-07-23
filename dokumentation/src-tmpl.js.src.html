@@ -1,160 +1,167 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>src\tmpl.js Dokumentation (Source)</title><link rel="stylesheet" href="css/style.css" media="all"><link rel="stylesheet" href="css/font-awesome.css" media="all"><link rel="stylesheet" href="css/sh.min.css" media="all"><script src="js/sh_main.min.js"></script><script src="js/sh_javascript.min.js"></script><script data-main="js/main.js" src="js/libs/require-jquery.js"></script></head><body id="source" onload="sh_highlightDocument();"><div id="wrapper"><div id="main"><aside class="items"><header><h1><a href="index.html"><em>Aperto</em><span><b>JS</b>Docs</span></a></h1></header><div id="filter"><form><div class="col col-3"><input type="search" placeholder="Suche" name="filter"><button><span>Los</span></button></div><div class="col col-9"><ul class="props"><li><input id="node-module" type="checkbox" name="node-module" checked><label for="node-module">node-module</label></li></ul></div></form></div><section data-type="node-module" data-name="doku" class="col col-3"><h1><a href="node.doku.html">doku</a></h1><h2>node-module (node)</h2><p>starts documentation on the files</p></section><section data-type="node-module" data-name="foldercopy" class="col col-3"><h1><a href="node.foldercopy.html">foldercopy</a></h1><h2>node-module (node)</h2><p>copies the specified folder</p></section><section data-type="node-module" data-name="tags" class="col col-3"><h1><a href="node.tags.html">tags</a></h1><h2>node-module (node)</h2><p>this parses the &quot;tags&quot;</p></section><section data-type="node-module" data-name="tmpl" class="col col-3"><h1><a href="node.tmpl.html">tmpl</a></h1><h2>node-module (node)</h2><p>gets the parsed comments and generates the html</p></section></aside><div id="content"><h1> <span>Source View</span>src\tmpl.js</h1><pre class="sh_javascript">//
-// /--------------------------------------------\
-// |                                            |
-// | tmpl.js                                    |
-// | part of &quot;dokumentiere&quot;                     |
-// | licensed under GPLv2                       |
-// |                                            |
-// \--------------------------------------------/
-
-var jade = require( 'jade' );
-var cwd = process.cwd();
-var path = require( 'path' );
-var fs = require( 'fs' );
-var fc = require( './foldercopy' );
-
-/*-
- * tmpl
- [ node-module (node) ]
- * gets the parsed comments and generates the html
- &gt; Usage
- | var tmpl = require('tmpl');
- -*/
-var tmpl = {
-	/*-
-	 * generate(obj, out)
-	 [ function (public) ]
-	 * iterates over the generated object and generates html for each 
-	 * file and an index file @see function-index function-items
-	 &gt; Parameter
-	 - obj (object) the comment-parsed object
-	 - out (string) the folder to put the documentation to
-	 -*/
-	generate: function( obj, out ) {
-		this.out = out;
-		var index = [];
-		var types = [];
-		for( var prop in obj) {
-			if ( obj.hasOwnProperty( prop ) ) {
-				index = index.concat( obj[prop] );
-				for( var i = 0, file = obj[prop], len = file.length; i &lt; len; i++) {
-					if ( !~types.indexOf( file[i].type ) ) {
-						types.push( file[i].type );
-					}
-				}
-			}
-		}
-		
-		this.index( index, types );
-		
-		for( var prop in obj) {
-			if ( obj.hasOwnProperty( prop ) ) {
-				this.items( obj[prop], prop, index, types );
-			}
-		}
-		
-		fc.recursiveCopy( ['css', 'img', 'js'], ['templates', 'public'], out );
-	},
-	/*-
-	 * index(arr, types)
-	 [ function (public) ]
-	 * generates the index-file @see function-render
-	 * to adjust HTML see index.jade in the templates folder
-	 &gt; Parameter
-	 - arr (array) the array of files documented
-	 - types (array) the array of types of documented elements
-	 -*/
-	index: function( arr, types ) {
-		var that = this;
-		this.render( 'index', {
-			index: arr,
-			types: types
-		}, function() {
-			that.writeHTML.apply( that, arguments );
-		} );
-	},
-	/*-
-	 * items(arr, file, index, types)
-	 [ function (public) ]
-	 * generates the markup for each file @see function-render
-	 * to adjust HTML see module.jade in the templates folder
-	 &gt; Parameter
-	 - arr (array) the array of all parsed elements in a file
-	 - file (string) the name of the file, in which the element is
-	 - index (array) the array of all elements adjusted for index @see function-index
-	 - types (array) an array of all types
-	 -*/
-	items: function( arr, file, index, types ) {
-		var that = this;
-		this.render('src', {
-			index: index,
-			types: types,
-			src: arr.src,
-			name: file
-		}, function() {
-			that.writeHTML.apply(that, arguments);
-		});
-		for( var i = 0, len = arr.length; i &lt; len; i++) {
-			this.render( 'module', {
-				index: index,
-				item: arr[i],
-				file: file,
-				link: file.replace(new RegExp('\\'+path.sep, 'g'), '-')+'.src.html',
-				types: types
-			}, function() {
-				that.writeHTML.apply( that, arguments );
-			} );
-		}
-	},
-	/*-
-	 * render(tmplName, data, callback)
-	 [ function (public) ]
-	 * compiles the data
-	 * passes the data to the jade compiler and calls the given callback with the html
-	 &gt; Parameter
-	 - tmplName (string) the name of the template to use
-	 - data (object) the data to compile
-	 - callback (function) the function to call with the html
-	 -*/
-	render: function( tmplName, data, callback ) {
-		var name = __dirname + path.sep + 'templates' + path.sep + tmplName + '.jade';
-		fs.readFile( name, 'utf8', function( err, content ) {
-			if ( err ) {
-				throw err;
-			}
-			var fn = jade.compile( content, {
-				filename: name,
-				self: true
-			} );
-			callback( fn( data ), 
-				data.item
-					? ((data.item.scope || data.item.visibility) + '.' + (data.item &amp;&amp; data.item.name))
-					: data.src
-						? data.name.replace(new RegExp('\\'+path.sep, 'g'), '-') + '.src' 
-						: 'index'
-			);
-		} );
-	},
-	/*-
-	 * writeHTML(html, name);
-	 [ function (public) ]
-	 * writes html! simple as that
-	 * writes the given html to the defined path-name
-	 &gt; Parameter
-	 - html (string) the compiled HTML
-	 - name (string) the name of the file to write to
-	 -*/
-	writeHTML: function( html, name ) {
-		fs.writeFile( cwd + path.sep + this.out + path.sep + name + '.html', html, 'utf8', function( err ) {
-			if ( err ) {
-				console.log( 'could not document ' + name + '.html, because: ' );
-				console.log( err );
-				return;
-			}
-			// console.log('documented '+name+'.html');
-		} );
-	}
-};
-
-module.exports = tmpl;
-</pre></div></div></div></body></html>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>src\tmpl.js Dokumentation (Source)</title><link rel="stylesheet" href="css/style.css" media="all"><link rel="stylesheet" href="css/font-awesome.css" media="all"><link rel="stylesheet" href="css/sh.min.css" media="all"><script src="js/sh_main.min.js"></script><script src="js/sh_javascript.min.js"></script><script data-main="js/main.js" src="js/libs/require-jquery.js"></script><script>$(function() {
+ if(location.hash) {
+  var name = location.hash.substring(1, location.hash.length);
+  $('a[name="'+name+'"]').addClass('highlight');
+ }
+})</script></head><body id="source" onload="sh_highlightDocument();"><div id="wrapper"><div id="main"><aside class="items"><header><h1><a href="index.html"><em>Aperto</em><span><b>JS</b>Docs</span></a></h1></header><div id="filter"><form><div class="col col-3"><input type="search" placeholder="Suche" name="filter"><button><span>Los</span></button></div><div class="col col-9"><ul class="props"><li><input id="node-module" type="checkbox" name="node-module" checked><label for="node-module">node-module</label></li></ul></div></form></div><section data-type="node-module" data-name="doku" class="col col-3"><h1><a href="node.doku.html">doku</a></h1><h2>node-module (node)</h2><p>starts documentation on the files</p></section><section data-type="node-module" data-name="foldercopy" class="col col-3"><h1><a href="node.foldercopy.html">foldercopy</a></h1><h2>node-module (node)</h2><p>copies the specified folder</p></section><section data-type="node-module" data-name="tags" class="col col-3"><h1><a href="node.tags.html">tags</a></h1><h2>node-module (node)</h2><p>this parses the &quot;tags&quot;</p></section><section data-type="node-module" data-name="tmpl" class="col col-3"><h1><a href="node.tmpl.html">tmpl</a></h1><h2>node-module (node)</h2><p>gets the parsed comments and generates the html</p></section></aside><div id="content"><h1> <span>Source View</span>src\tmpl.js</h1><pre class="sh_javascript"><a name="line-1" data-line="1">//
+</a><a name="line-2" data-line="2">// /--------------------------------------------\
+</a><a name="line-3" data-line="3">// |                                            |
+</a><a name="line-4" data-line="4">// | tmpl.js                                    |
+</a><a name="line-5" data-line="5">// | part of &quot;dokumentiere&quot;                     |
+</a><a name="line-6" data-line="6">// | licensed under GPLv2                       |
+</a><a name="line-7" data-line="7">// |                                            |
+</a><a name="line-8" data-line="8">// \--------------------------------------------/
+</a><a name="line-9" data-line="9">
+</a><a name="line-10" data-line="10">var jade = require( 'jade' );
+</a><a name="line-11" data-line="11">var cwd = process.cwd();
+</a><a name="line-12" data-line="12">var path = require( 'path' );
+</a><a name="line-13" data-line="13">var fs = require( 'fs' );
+</a><a name="line-14" data-line="14">var fc = require( './foldercopy' );
+</a><a name="line-15" data-line="15">
+</a><a name="line-16" data-line="16">/*-
+</a><a name="line-17" data-line="17"> * tmpl
+</a><a name="line-18" data-line="18"> [ node-module (node) ]
+</a><a name="line-19" data-line="19"> : bobbor
+</a><a name="line-20" data-line="20"> * gets the parsed comments and generates the html
+</a><a name="line-21" data-line="21"> &gt; Usage
+</a><a name="line-22" data-line="22"> | var tmpl = require('tmpl');
+</a><a name="line-23" data-line="23"> -*/
+</a><a name="line-24" data-line="24">var tmpl = {
+</a><a name="line-25" data-line="25">	/*-
+</a><a name="line-26" data-line="26">	 * generate(obj, out)
+</a><a name="line-27" data-line="27">	 [ function (public) ]
+</a><a name="line-28" data-line="28">	 * iterates over the generated object and generates html for each 
+</a><a name="line-29" data-line="29">	 * file and an index file @see function-index function-items
+</a><a name="line-30" data-line="30">	 &gt; Parameter
+</a><a name="line-31" data-line="31">	 - obj (object) the comment-parsed object
+</a><a name="line-32" data-line="32">	 - out (string) the folder to put the documentation to
+</a><a name="line-33" data-line="33">	 -*/
+</a><a name="line-34" data-line="34">	generate: function( obj, out ) {
+</a><a name="line-35" data-line="35">		this.out = out;
+</a><a name="line-36" data-line="36">		var index = [];
+</a><a name="line-37" data-line="37">		var types = [];
+</a><a name="line-38" data-line="38">		for( var prop in obj) {
+</a><a name="line-39" data-line="39">			if ( obj.hasOwnProperty( prop ) ) {
+</a><a name="line-40" data-line="40">				index = index.concat( obj[prop] );
+</a><a name="line-41" data-line="41">				for( var i = 0, file = obj[prop], len = file.length; i &lt; len; i++) {
+</a><a name="line-42" data-line="42">					if ( !~types.indexOf( file[i].type ) ) {
+</a><a name="line-43" data-line="43">						types.push( file[i].type );
+</a><a name="line-44" data-line="44">					}
+</a><a name="line-45" data-line="45">				}
+</a><a name="line-46" data-line="46">			}
+</a><a name="line-47" data-line="47">		}
+</a><a name="line-48" data-line="48">		
+</a><a name="line-49" data-line="49">		this.index( index, types );
+</a><a name="line-50" data-line="50">		
+</a><a name="line-51" data-line="51">		for( var prop in obj) {
+</a><a name="line-52" data-line="52">			if ( obj.hasOwnProperty( prop ) ) {
+</a><a name="line-53" data-line="53">				this.items( obj[prop], prop, index, types );
+</a><a name="line-54" data-line="54">			}
+</a><a name="line-55" data-line="55">		}
+</a><a name="line-56" data-line="56">		
+</a><a name="line-57" data-line="57">		fc.recursiveCopy( ['css', 'img', 'js'], ['templates', 'public'], out );
+</a><a name="line-58" data-line="58">	},
+</a><a name="line-59" data-line="59">	/*-
+</a><a name="line-60" data-line="60">	 * index(arr, types)
+</a><a name="line-61" data-line="61">	 [ function (public) ]
+</a><a name="line-62" data-line="62">	 * generates the index-file @see function-render
+</a><a name="line-63" data-line="63">	 * to adjust HTML see index.jade in the templates folder
+</a><a name="line-64" data-line="64">	 &gt; Parameter
+</a><a name="line-65" data-line="65">	 - arr (array) the array of files documented
+</a><a name="line-66" data-line="66">	 - types (array) the array of types of documented elements
+</a><a name="line-67" data-line="67">	 -*/
+</a><a name="line-68" data-line="68">	index: function( arr, types ) {
+</a><a name="line-69" data-line="69">		var that = this;
+</a><a name="line-70" data-line="70">		this.render( 'index', {
+</a><a name="line-71" data-line="71">			index: arr,
+</a><a name="line-72" data-line="72">			types: types
+</a><a name="line-73" data-line="73">		}, function() {
+</a><a name="line-74" data-line="74">			that.writeHTML.apply( that, arguments );
+</a><a name="line-75" data-line="75">		} );
+</a><a name="line-76" data-line="76">	},
+</a><a name="line-77" data-line="77">	/*-
+</a><a name="line-78" data-line="78">	 * items(arr, file, index, types)
+</a><a name="line-79" data-line="79">	 [ function (public) ]
+</a><a name="line-80" data-line="80">	 * generates the markup for each file @see function-render
+</a><a name="line-81" data-line="81">	 * to adjust HTML see module.jade in the templates folder
+</a><a name="line-82" data-line="82">	 &gt; Parameter
+</a><a name="line-83" data-line="83">	 - arr (array) the array of all parsed elements in a file
+</a><a name="line-84" data-line="84">	 - file (string) the name of the file, in which the element is
+</a><a name="line-85" data-line="85">	 - index (array) the array of all elements adjusted for index @see function-index
+</a><a name="line-86" data-line="86">	 - types (array) an array of all types
+</a><a name="line-87" data-line="87">	 -*/
+</a><a name="line-88" data-line="88">	items: function( arr, file, index, types ) {
+</a><a name="line-89" data-line="89">		var that = this;
+</a><a name="line-90" data-line="90">		this.render('src', {
+</a><a name="line-91" data-line="91">			index: index,
+</a><a name="line-92" data-line="92">			types: types,
+</a><a name="line-93" data-line="93">			src: arr.src,
+</a><a name="line-94" data-line="94">			name: file
+</a><a name="line-95" data-line="95">		}, function() {
+</a><a name="line-96" data-line="96">			that.writeHTML.apply(that, arguments);
+</a><a name="line-97" data-line="97">		});
+</a><a name="line-98" data-line="98">		for( var i = 0, len = arr.length; i &lt; len; i++) {
+</a><a name="line-99" data-line="99">			this.render( 'module', {
+</a><a name="line-100" data-line="100">				index: index,
+</a><a name="line-101" data-line="101">				item: arr[i],
+</a><a name="line-102" data-line="102">				file: file,
+</a><a name="line-103" data-line="103">				link: file.replace(new RegExp('\\'+path.sep, 'g'), '-')+'.src.html',
+</a><a name="line-104" data-line="104">				types: types
+</a><a name="line-105" data-line="105">			}, function() {
+</a><a name="line-106" data-line="106">				that.writeHTML.apply( that, arguments );
+</a><a name="line-107" data-line="107">			} );
+</a><a name="line-108" data-line="108">		}
+</a><a name="line-109" data-line="109">	},
+</a><a name="line-110" data-line="110">	/*-
+</a><a name="line-111" data-line="111">	 * render(tmplName, data, callback)
+</a><a name="line-112" data-line="112">	 [ function (public) ]
+</a><a name="line-113" data-line="113">	 * compiles the data
+</a><a name="line-114" data-line="114">	 * passes the data to the jade compiler and calls the given callback with the html
+</a><a name="line-115" data-line="115">	 &gt; Parameter
+</a><a name="line-116" data-line="116">	 - tmplName (string) the name of the template to use
+</a><a name="line-117" data-line="117">	 - data (object) the data to compile
+</a><a name="line-118" data-line="118">	 - callback (function) the function to call with the html
+</a><a name="line-119" data-line="119">	 -*/
+</a><a name="line-120" data-line="120">	render: function( tmplName, data, callback ) {
+</a><a name="line-121" data-line="121">		var name = __dirname + path.sep + 'templates' + path.sep + tmplName + '.jade';
+</a><a name="line-122" data-line="122">		fs.readFile( name, 'utf8', function( err, content ) {
+</a><a name="line-123" data-line="123">			if ( err ) {
+</a><a name="line-124" data-line="124">				throw err;
+</a><a name="line-125" data-line="125">			}
+</a><a name="line-126" data-line="126">			var fn = jade.compile( content, {
+</a><a name="line-127" data-line="127">				filename: name,
+</a><a name="line-128" data-line="128">				self: true
+</a><a name="line-129" data-line="129">			} );
+</a><a name="line-130" data-line="130">			callback( fn( data ), 
+</a><a name="line-131" data-line="131">				data.item
+</a><a name="line-132" data-line="132">					? ((data.item.scope || data.item.visibility) + '.' + (data.item &amp;&amp; data.item.name))
+</a><a name="line-133" data-line="133">					: data.src
+</a><a name="line-134" data-line="134">						? data.name.replace(new RegExp('\\'+path.sep, 'g'), '-') + '.src' 
+</a><a name="line-135" data-line="135">						: 'index'
+</a><a name="line-136" data-line="136">			);
+</a><a name="line-137" data-line="137">		} );
+</a><a name="line-138" data-line="138">	},
+</a><a name="line-139" data-line="139">	/*-
+</a><a name="line-140" data-line="140">	 * writeHTML(html, name);
+</a><a name="line-141" data-line="141">	 [ function (public) ]
+</a><a name="line-142" data-line="142">	 * writes html! simple as that
+</a><a name="line-143" data-line="143">	 * writes the given html to the defined path-name
+</a><a name="line-144" data-line="144">	 &gt; Parameter
+</a><a name="line-145" data-line="145">	 - html (string) the compiled HTML
+</a><a name="line-146" data-line="146">	 - name (string) the name of the file to write to
+</a><a name="line-147" data-line="147">	 -*/
+</a><a name="line-148" data-line="148">	writeHTML: function( html, name ) {
+</a><a name="line-149" data-line="149">		fs.writeFile( cwd + path.sep + this.out + path.sep + name + '.html', html, 'utf8', function( err ) {
+</a><a name="line-150" data-line="150">			if ( err ) {
+</a><a name="line-151" data-line="151">				console.log( 'could not document ' + name + '.html, because: ' );
+</a><a name="line-152" data-line="152">				console.log( err );
+</a><a name="line-153" data-line="153">				return;
+</a><a name="line-154" data-line="154">			}
+</a><a name="line-155" data-line="155">			// console.log('documented '+name+'.html');
+</a><a name="line-156" data-line="156">		} );
+</a><a name="line-157" data-line="157">	}
+</a><a name="line-158" data-line="158">};
+</a><a name="line-159" data-line="159">
+</a><a name="line-160" data-line="160">module.exports = tmpl;
+</a><a name="line-161" data-line="161">
+</a></pre></div></div></div></body></html>

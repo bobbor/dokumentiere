@@ -70,6 +70,12 @@
 	h2,h3 {
 		@include headline;
 	}
+	h2 a {
+		display: inline-block;
+		color: $blue;
+		text-decoration: none;
+		margin-left: 5px;
+	}
 	
 	dl {
 		@extend .col-wrapper;
@@ -301,19 +307,29 @@
 				}
 				
 				a {
-					position: absolute;
-					left: -30px;
 					color: black;
 					font-size: 162%;
 					text-decoration: none;
-					top: 0px;
-					display: none;
 					width: 30px;
-					line-height: 1.35;
+					display: none;
+					&.icon-hand-right {
+						position: absolute;
+						left: -30px;
+						top: 0px;
+						line-height: 1.35;
+					}
+					&.icon-screenshot {
+						line-height: 0.1;
+						margin-left: 15px;
+						font-weight: 100;
+					}
 				}
 			}
 			> dl > dt:hover a {
-				display: block;
+				display: inline;
+				&.icon-hand-right {
+					display: block;
+				}
 			}
 			> dl > dd {
 				border-left: 2px solid #f80;

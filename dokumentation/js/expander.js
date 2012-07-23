@@ -9,7 +9,8 @@ define(function() {
 			});
 		},
 		fns: function(el) {
-			el.bind('click', function() {
+			el.bind('click', function(e) {
+				if(e.target.nodeName === 'A') { return true; }
 				var elms = $(this).add($(this).next());
 				elms[elms.is('.open') ? 'removeClass' : 'addClass']('open');
 				return false;

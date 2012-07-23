@@ -13,6 +13,7 @@ var path = require( 'path' );
 /*-
  * foldercopy
  [ node-module (node) ]
+ : bobbor
  * copies the specified folder
  * it does it recursively from the source-folder to destination-folder including all files
  > Usage

@@ -9,6 +9,13 @@ html
 		script(src="js/sh_main.min.js")
 		script(src="js/sh_javascript.min.js")
 		script(data-main="js/main.js",src="js/libs/require-jquery.js")
+		script
+			$(function() {
+				if(location.hash) {
+					var name = location.hash.substring(1, location.hash.length);
+					$('a[name="'+name+'"]').addClass('highlight');
+				}
+			})
 	body#source(onload="sh_highlightDocument();")
 		#wrapper
 			#main
