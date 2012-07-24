@@ -1,7 +1,12 @@
 #filter {
 	overflow: hidden;
 	position: relative;
-
+	width: 100%;
+	
+	aside & {
+		width: 220px;
+		overflow: hidden;
+	}
 	.col-1 {
 		background-color: white;
 		position: relative;

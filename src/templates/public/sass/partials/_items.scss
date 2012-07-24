@@ -12,6 +12,8 @@
 		padding: 10px;
 		background-color: white;
 		color: $medgrey;
+		min-height: 125px;
+		vertical-align: top;
 	}
 	
 	section h1 a {
@@ -37,6 +39,7 @@
 	section p {
 		font-size: 14px;
 		font-weight: 100;
+		word-break: break-word;
 	}
 
 	section h2 {

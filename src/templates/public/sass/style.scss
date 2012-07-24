@@ -79,3 +79,17 @@ textarea {
 @import "partials/content";
 @import "partials/types";
 @import "partials/source_view";
+
+
+/* scrollpane */
+.jspTrack,
+.jspVerticalBar {
+	background-color: transparent;
+}
+.jspVerticalBar {
+	width: 5px;
+}
+.jspDrag {
+	background-color: rgba(0,0,0,0.75);
+	border-radius: 5px;
+}

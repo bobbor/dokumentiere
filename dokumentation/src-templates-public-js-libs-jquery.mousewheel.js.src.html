@@ -1,0 +1,96 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>src\templates\public\js\libs\jquery.mousewheel.js Dokumentation (Source)</title><link rel="stylesheet" href="css/jquery.jscrollpane.css" media="all"><link rel="stylesheet" href="css/style.css" media="all"><link rel="stylesheet" href="css/font-awesome.css" media="all"><link rel="stylesheet" href="css/sh.min.css" media="all"><script src="js/sh_main.min.js"></script><script src="js/sh_javascript.min.js"></script><script data-main="js/main.js" src="js/libs/require-jquery.js"></script><script>$(function() {
+ if(location.hash) {
+  var name = location.hash.substring(1, location.hash.length);
+  $('a[name="'+name+'"]').addClass('highlight');
+ }
+})</script></head><body id="source" onload="sh_highlightDocument();"><div id="wrapper"><div id="main"><aside class="items"><header><h1><a href="index.html"><em>Aperto</em><span><b>JS</b>Docs</span></a></h1></header><div id="filter"><form><div class="col col-3"><input type="search" placeholder="Suche" name="filter"><button><span>Los</span></button></div><div class="col col-9"><ul class="props"><li><input id="node-module" type="checkbox" name="node-module" checked><label for="node-module">node-module</label></li></ul></div></form></div><section data-type="node-module" data-name="doku" class="col col-3"><h1><a href="node.doku.html">doku</a></h1><h2>node-module (node)</h2><p>starts documentation on the files</p></section><section data-type="node-module" data-name="foldercopy" class="col col-3"><h1><a href="node.foldercopy.html">foldercopy</a></h1><h2>node-module (node)</h2><p>copies the specified folder</p></section><section data-type="node-module" data-name="tags" class="col col-3"><h1><a href="node.tags.html">tags</a></h1><h2>node-module (node)</h2><p>this parses the &quot;tags&quot;</p></section><section data-type="node-module" data-name="tmpl" class="col col-3"><h1><a href="node.tmpl.html">tmpl</a></h1><h2>node-module (node)</h2><p>gets the parsed comments and generates the html</p></section></aside><div id="content"><h1> <span>Source View</span>src\templates\public\js\libs\jquery.mousewheel.js</h1><pre class="sh_javascript"><a name="line-1" data-line="1">/*
+</a><a name="line-2" data-line="2"> * ! Copyright (c) 2011 Brandon Aaron (http://brandonaaron.net) Licensed under the MIT License (LICENSE.txt).
+</a><a name="line-3" data-line="3"> * 
+</a><a name="line-4" data-line="4"> * Thanks to: http://adomas.org/javascript-mouse-wheel/ for some pointers. Thanks to: Mathias Bank(http://www.mathias-bank.de) for a scope bug fix. Thanks to: Seamus Leahy for adding deltaX and deltaY
+</a><a name="line-5" data-line="5"> * 
+</a><a name="line-6" data-line="6"> * Version: 3.0.6
+</a><a name="line-7" data-line="7"> * 
+</a><a name="line-8" data-line="8"> * Requires: 1.2.2+
+</a><a name="line-9" data-line="9"> */
+</a><a name="line-10" data-line="10">
+</a><a name="line-11" data-line="11">(function( $ ) {
+</a><a name="line-12" data-line="12">	
+</a><a name="line-13" data-line="13">	var types = ['DOMMouseScroll', 'mousewheel'];
+</a><a name="line-14" data-line="14">	
+</a><a name="line-15" data-line="15">	if ( $.event.fixHooks ) {
+</a><a name="line-16" data-line="16">		for( var i = types.length; i;) {
+</a><a name="line-17" data-line="17">			$.event.fixHooks[types[--i]] = $.event.mouseHooks;
+</a><a name="line-18" data-line="18">		}
+</a><a name="line-19" data-line="19">	}
+</a><a name="line-20" data-line="20">	
+</a><a name="line-21" data-line="21">	$.event.special.mousewheel = {
+</a><a name="line-22" data-line="22">		setup: function() {
+</a><a name="line-23" data-line="23">			if ( this.addEventListener ) {
+</a><a name="line-24" data-line="24">				for( var i = types.length; i;) {
+</a><a name="line-25" data-line="25">					this.addEventListener( types[--i], handler, false );
+</a><a name="line-26" data-line="26">				}
+</a><a name="line-27" data-line="27">			} else {
+</a><a name="line-28" data-line="28">				this.onmousewheel = handler;
+</a><a name="line-29" data-line="29">			}
+</a><a name="line-30" data-line="30">		},
+</a><a name="line-31" data-line="31">		
+</a><a name="line-32" data-line="32">		teardown: function() {
+</a><a name="line-33" data-line="33">			if ( this.removeEventListener ) {
+</a><a name="line-34" data-line="34">				for( var i = types.length; i;) {
+</a><a name="line-35" data-line="35">					this.removeEventListener( types[--i], handler, false );
+</a><a name="line-36" data-line="36">				}
+</a><a name="line-37" data-line="37">			} else {
+</a><a name="line-38" data-line="38">				this.onmousewheel = null;
+</a><a name="line-39" data-line="39">			}
+</a><a name="line-40" data-line="40">		}
+</a><a name="line-41" data-line="41">	};
+</a><a name="line-42" data-line="42">	
+</a><a name="line-43" data-line="43">	$.fn.extend( {
+</a><a name="line-44" data-line="44">		mousewheel: function( fn ) {
+</a><a name="line-45" data-line="45">			return fn ? this.bind( &quot;mousewheel&quot;, fn ) : this.trigger( &quot;mousewheel&quot; );
+</a><a name="line-46" data-line="46">		},
+</a><a name="line-47" data-line="47">		
+</a><a name="line-48" data-line="48">		unmousewheel: function( fn ) {
+</a><a name="line-49" data-line="49">			return this.unbind( &quot;mousewheel&quot;, fn );
+</a><a name="line-50" data-line="50">		}
+</a><a name="line-51" data-line="51">	} );
+</a><a name="line-52" data-line="52">	
+</a><a name="line-53" data-line="53">	function handler( event ) {
+</a><a name="line-54" data-line="54">		var orgEvent = event || window.event, args = [].slice.call( arguments, 1 ), delta = 0, returnValue = true, deltaX = 0, deltaY = 0;
+</a><a name="line-55" data-line="55">		event = $.event.fix( orgEvent );
+</a><a name="line-56" data-line="56">		event.type = &quot;mousewheel&quot;;
+</a><a name="line-57" data-line="57">		
+</a><a name="line-58" data-line="58">		// Old school scrollwheel delta
+</a><a name="line-59" data-line="59">		if ( orgEvent.wheelDelta ) {
+</a><a name="line-60" data-line="60">			delta = orgEvent.wheelDelta / 120;
+</a><a name="line-61" data-line="61">		}
+</a><a name="line-62" data-line="62">		if ( orgEvent.detail ) {
+</a><a name="line-63" data-line="63">			delta = -orgEvent.detail / 3;
+</a><a name="line-64" data-line="64">		}
+</a><a name="line-65" data-line="65">		
+</a><a name="line-66" data-line="66">		// New school multidimensional scroll (touchpads) deltas
+</a><a name="line-67" data-line="67">		deltaY = delta;
+</a><a name="line-68" data-line="68">		
+</a><a name="line-69" data-line="69">		// Gecko
+</a><a name="line-70" data-line="70">		if ( orgEvent.axis !== undefined &amp;&amp; orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
+</a><a name="line-71" data-line="71">			deltaY = 0;
+</a><a name="line-72" data-line="72">			deltaX = -1 * delta;
+</a><a name="line-73" data-line="73">		}
+</a><a name="line-74" data-line="74">		
+</a><a name="line-75" data-line="75">		// Webkit
+</a><a name="line-76" data-line="76">		if ( orgEvent.wheelDeltaY !== undefined ) {
+</a><a name="line-77" data-line="77">			deltaY = orgEvent.wheelDeltaY / 120;
+</a><a name="line-78" data-line="78">		}
+</a><a name="line-79" data-line="79">		if ( orgEvent.wheelDeltaX !== undefined ) {
+</a><a name="line-80" data-line="80">			deltaX = -1 * orgEvent.wheelDeltaX / 120;
+</a><a name="line-81" data-line="81">		}
+</a><a name="line-82" data-line="82">		
+</a><a name="line-83" data-line="83">		// Add event and delta to the front of the arguments
+</a><a name="line-84" data-line="84">		args.unshift( event, delta, deltaX, deltaY );
+</a><a name="line-85" data-line="85">		
+</a><a name="line-86" data-line="86">		return ($.event.dispatch || $.event.handle).apply( this, args );
+</a><a name="line-87" data-line="87">	}
+</a><a name="line-88" data-line="88">	
+</a><a name="line-89" data-line="89">})( jQuery );
+</a><a name="line-90" data-line="90">
+</a></pre></div></div></div></body></html>

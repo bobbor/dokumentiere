@@ -12,6 +12,7 @@ define(function() {
 				elm.elm.hide();
 			}
 		});
+		$('#item aside, #source aside').jScrollPane();
 	};
 	
 	var checkedFilters = function(sender) {
@@ -33,6 +34,7 @@ define(function() {
 				elm.elm.hide();
 			}
 		} );
+		$('#item aside, #source aside').jScrollPane();
 	};
 	
 	var filter = function(sender, receiver) {
@@ -49,6 +51,9 @@ define(function() {
 		$('input[type="search"]', sender).bind('keyup', function(e) {
 			applySearch(e.target.value);
 			return false;
+		});
+		$('input[type="search"]', sender).bind('click', function(e) {
+			applySearch(e.target.value);
 		});
 		checkedFilters(sender);
 		$('input[type="checkbox"]', sender).bind('change', function(e) {

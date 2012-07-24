@@ -20,7 +20,10 @@
 	}
 	
 	require([
-		"jquery"
+		"jquery",
+		"libs/jquery.mousewheel",
+		"libs/mwheelIntent",
+		"libs/jquery.jscrollpane.min"
 	], function( $ ) {
 
 		var projectInit = {
@@ -32,6 +35,7 @@
 				checkHash();
 				enableExtended();
 				itemFilter();
+				$('#item aside, #source aside').jScrollPane();
 			}
 		};
 
