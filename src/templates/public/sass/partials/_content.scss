@@ -308,20 +308,22 @@
 				
 				a {
 					color: black;
-					font-size: 162%;
 					text-decoration: none;
 					width: 30px;
 					display: none;
+					
 					&.icon-hand-right {
 						position: absolute;
 						left: -30px;
 						top: 0px;
 						line-height: 1.35;
+						font-size: 162%;
 					}
 					&.icon-screenshot {
-						line-height: 0.1;
 						margin-left: 15px;
 						font-weight: 100;
+						font-size: 120%;
+						line-height: 0.9;
 					}
 				}
 			}

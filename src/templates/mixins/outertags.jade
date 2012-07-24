@@ -1,5 +1,5 @@
 mixin outertags(arr, fns, ret, link, prefix)
-	- prefix = prefix ? prefix+'-' : ''
+	- prefix = typeof prefix !== 'undefined' ? prefix+'-' : ''
 	dl.tags
 		- for( var tag in arr)
 			- if(tag !== 'Usage')

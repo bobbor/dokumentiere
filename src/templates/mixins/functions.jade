@@ -20,4 +20,4 @@ mixin functions(fns, link)
 					if refs.length
 						for ref in refs
 							a.icon-caret-right(href="##{ref.link}") #{ref.name}
-				mixin outertags(fns[i].tags, null, fns[i].returns, link, "function-"+fns[i].name.replace(/\([\S\s]+\)/gi))
+				mixin outertags(fns[i].tags, null, fns[i].returns, link, "function-"+fns[i].name.replace(/\([\S\s]+\)/gi, ''))
