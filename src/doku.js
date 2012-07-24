@@ -17,12 +17,12 @@ var tmpl = require( './tmpl' );
  : bobbor
  * starts documentation on the files
  > Properties
- - version (string) <'0.5.0'> the version of the module
+ - version (string) <'0.6.0'> the version of the module
  > Usage
  | var doku = require('doku');
  -*/
 var doku = {
-	version: '0.5.0',
+	version: '0.6.0',
 	/*-
 	 * parse(files, out)
 	 [ function (public) ]
