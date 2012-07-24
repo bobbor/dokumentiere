@@ -18,30 +18,42 @@
 </a><a name="line-13" data-line="13">				});
 </a><a name="line-14" data-line="14">			}
 </a><a name="line-15" data-line="15">
-</a><a name="line-16" data-line="16">			elms.on('click', function() {
-</a><a name="line-17" data-line="17">				hash = $(this).attr('href');
-</a><a name="line-18" data-line="18">				hash = hash.substring(1, hash.length);
-</a><a name="line-19" data-line="19">				exp.init(hash, function() {
-</a><a name="line-20" data-line="20">					that.scrollToElement(hash);
-</a><a name="line-21" data-line="21">				});
-</a><a name="line-22" data-line="22">			});
-</a><a name="line-23" data-line="23">		},
-</a><a name="line-24" data-line="24">
-</a><a name="line-25" data-line="25">		scrollToElement: function( hash ) {
-</a><a name="line-26" data-line="26">			
-</a><a name="line-27" data-line="27">			var from = $(document).scrollTop();
-</a><a name="line-28" data-line="28">			var elm = $(document.getElementById(hash) || document.getElementsByName(hash)[0]);
-</a><a name="line-29" data-line="29">			var to = elm.offset().top;
+</a><a name="line-16" data-line="16">			elms.on('click', function(e) {
+</a><a name="line-17" data-line="17">				e.preventDefault();
+</a><a name="line-18" data-line="18">				e.stopPropagation();
+</a><a name="line-19" data-line="19">				e.stopImmediatePropagation();
+</a><a name="line-20" data-line="20">				hash = $(this).attr('href');
+</a><a name="line-21" data-line="21">				hash = hash.substring(1, hash.length);
+</a><a name="line-22" data-line="22">				exp.init(hash, function() {
+</a><a name="line-23" data-line="23">					that.scrollToElement(hash);
+</a><a name="line-24" data-line="24">				});
+</a><a name="line-25" data-line="25">				return false;
+</a><a name="line-26" data-line="26">			});
+</a><a name="line-27" data-line="27">		},
+</a><a name="line-28" data-line="28">
+</a><a name="line-29" data-line="29">		scrollToElement: function( hash ) {
 </a><a name="line-30" data-line="30">			
-</a><a name="line-31" data-line="31">			document.state = 0;
-</a><a name="line-32" data-line="32">			$(document).animate({
-</a><a name="line-33" data-line="33">				state: 1
-</a><a name="line-34" data-line="34">			}, {
-</a><a name="line-35" data-line="35">				step: function( val, fx ) {
-</a><a name="line-36" data-line="36">					$(document).scrollTop(fx.pos * to + (1 - fx.pos) * from);
-</a><a name="line-37" data-line="37">				}
-</a><a name="line-38" data-line="38">			});
-</a><a name="line-39" data-line="39">		}
-</a><a name="line-40" data-line="40">	};
-</a><a name="line-41" data-line="41">});
+</a><a name="line-31" data-line="31">			var from = $(document).scrollTop();
+</a><a name="line-32" data-line="32">			var elm = $(document.getElementById(hash) || document.getElementsByName(hash)[0]);
+</a><a name="line-33" data-line="33">			if(!elm.length) { return; }
+</a><a name="line-34" data-line="34">			var to = elm.offset().top;
+</a><a name="line-35" data-line="35">			var speed = 1;
+</a><a name="line-36" data-line="36">			document.body.state = 0;
+</a><a name="line-37" data-line="37">			var dur = Math.floor(Math.abs(to-from)*speed);
+</a><a name="line-38" data-line="38">			console.log(dur)
+</a><a name="line-39" data-line="39">			$(document.body).animate({
+</a><a name="line-40" data-line="40">				state: 1
+</a><a name="line-41" data-line="41">			}, {
+</a><a name="line-42" data-line="42">				duration: dur,
+</a><a name="line-43" data-line="43">				step: function( val, fx ) {
+</a><a name="line-44" data-line="44">					console.log(fx.pos)
+</a><a name="line-45" data-line="45">					$(document).scrollTop(fx.pos * to + (1 - fx.pos) * from);
+</a><a name="line-46" data-line="46">				},
+</a><a name="line-47" data-line="47">				complete: function() {
+</a><a name="line-48" data-line="48">					location.hash = '#'+hash;
+</a><a name="line-49" data-line="49">				}
+</a><a name="line-50" data-line="50">			});
+</a><a name="line-51" data-line="51">		}
+</a><a name="line-52" data-line="52">	};
+</a><a name="line-53" data-line="53">});
 </a></pre></div></div></div></body></html>

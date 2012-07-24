@@ -13,12 +13,16 @@ define([
 				});
 			}
 
-			elms.on('click', function() {
+			elms.on('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
 				hash = $(this).attr('href');
 				hash = hash.substring(1, hash.length);
 				exp.init(hash, function() {
 					that.scrollToElement(hash);
 				});
+				return false;
 			});
 		},
 
@@ -26,14 +30,22 @@ define([
 			
 			var from = $(document).scrollTop();
 			var elm = $(document.getElementById(hash) || document.getElementsByName(hash)[0]);
+			if(!elm.length) { return; }
 			var to = elm.offset().top;
-			
-			document.state = 0;
-			$(document).animate({
+			var speed = 1;
+			document.body.state = 0;
+			var dur = Math.floor(Math.abs(to-from)*speed);
+			console.log(dur)
+			$(document.body).animate({
 				state: 1
 			}, {
+				duration: dur,
 				step: function( val, fx ) {
+					console.log(fx.pos)
 					$(document).scrollTop(fx.pos * to + (1 - fx.pos) * from);
+				},
+				complete: function() {
+					location.hash = '#'+hash;
 				}
 			});
 		}

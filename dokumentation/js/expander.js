@@ -31,7 +31,11 @@ define(function( ) {
 						// but it has not yet been pushed
 						// so we are at the wrapping dl
 						// which results in the penultimate item being the searched dd
-						path[path.length - 2].addClass('open');
+						var cur = path[path.length - 2];
+						if(cur.is('dt')) {
+							cur = cur.next();
+						}
+						cur.addClass('open')
 					}
 					path.push(elm);
 					elm = elm.parent();

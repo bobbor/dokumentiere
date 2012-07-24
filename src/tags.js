@@ -303,7 +303,7 @@ var prettify = function( desc ) {
  * generateValids(valids)
  [ function (private) ]
  * generates all valids with type
- * walks through the array of valid values and checks the for a keyword @see keywordChecker
+ * walks through the array of valid values and checks the for a keyword @see function-keywordChecker
  > Parameter
  - valids (array) the array of valid values
  = (object) the map for the value
@@ -335,6 +335,7 @@ var keywordChecker = function( text ) {
 	var bool = /true|false/;
 	var string = /^(\'|\")[\S\s]+(\'|\")$/;
 	var number = /[0-9\.]+/;
+	var regexp = /^\/[\S\s]+[\/gim]+$/;
 	text = text.trim();
 	// we start with string, preventing strings ( e.g. "true" ) is not incorrectely interpreted
 	if ( string.test( text ) ) {
@@ -343,6 +344,8 @@ var keywordChecker = function( text ) {
 		return 'boolean';
 	} else if ( number.test( text ) ) {
 		return 'number';
+	} else if ( regexp.test(text) ) {
+		return 'regexp';
 	}
 	return 'default';
 };

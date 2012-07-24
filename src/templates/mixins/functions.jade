@@ -1,7 +1,7 @@
 mixin functions(fns, link)
 	dl
 		- for( var i = 0; i < fns.length; i++)
-			- var shortname = fns[i].name.replace(/\([\S\s]+\)/gi, '');
+			- var shortname = fns[i].name.replace(/\([\S\s]*\)/gi, '');
 			dt(id="function-#{shortname}")
 				a.icon-hand-right(href="#function-#{shortname}", title="permalink here")
 				!{'<i class="'+(fns[i].visibility === "private" ? 'icon-eye-close' : 'icon-eye-open')+'">'+fns[i].visibility+'</i> '+fns[i].name}
@@ -20,4 +20,4 @@ mixin functions(fns, link)
 					if refs.length
 						for ref in refs
 							a.icon-caret-right(href="##{ref.link}") #{ref.name}
-				mixin outertags(fns[i].tags, null, fns[i].returns, link, "function-"+fns[i].name.replace(/\([\S\s]+\)/gi, ''))
+				mixin outertags(fns[i].tags, null, fns[i].returns, link, "function-"+fns[i].name.replace(/\([\S\s]*\)/gi, ''))

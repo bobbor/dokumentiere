@@ -308,7 +308,7 @@
 </a><a name="line-303" data-line="303"> * generateValids(valids)
 </a><a name="line-304" data-line="304"> [ function (private) ]
 </a><a name="line-305" data-line="305"> * generates all valids with type
-</a><a name="line-306" data-line="306"> * walks through the array of valid values and checks the for a keyword @see keywordChecker
+</a><a name="line-306" data-line="306"> * walks through the array of valid values and checks the for a keyword @see function-keywordChecker
 </a><a name="line-307" data-line="307"> &gt; Parameter
 </a><a name="line-308" data-line="308"> - valids (array) the array of valid values
 </a><a name="line-309" data-line="309"> = (object) the map for the value
@@ -340,29 +340,32 @@
 </a><a name="line-335" data-line="335">	var bool = /true|false/;
 </a><a name="line-336" data-line="336">	var string = /^(\'|\&quot;)[\S\s]+(\'|\&quot;)$/;
 </a><a name="line-337" data-line="337">	var number = /[0-9\.]+/;
-</a><a name="line-338" data-line="338">	text = text.trim();
-</a><a name="line-339" data-line="339">	// we start with string, preventing strings ( e.g. &quot;true&quot; ) is not incorrectely interpreted
-</a><a name="line-340" data-line="340">	if ( string.test( text ) ) {
-</a><a name="line-341" data-line="341">		return 'string';
-</a><a name="line-342" data-line="342">	} else if ( bool.test( text ) ) {
-</a><a name="line-343" data-line="343">		return 'boolean';
-</a><a name="line-344" data-line="344">	} else if ( number.test( text ) ) {
-</a><a name="line-345" data-line="345">		return 'number';
-</a><a name="line-346" data-line="346">	}
-</a><a name="line-347" data-line="347">	return 'default';
-</a><a name="line-348" data-line="348">};
-</a><a name="line-349" data-line="349">/*-
-</a><a name="line-350" data-line="350"> * parseLine(obj, line)
-</a><a name="line-351" data-line="351"> [ function (public) ]
-</a><a name="line-352" data-line="352"> * parses the given line
-</a><a name="line-353" data-line="353"> &gt; Parameter
-</a><a name="line-354" data-line="354"> - obj (object) the object which should be extended with the right property
-</a><a name="line-355" data-line="355"> - line (string) the line to comment of the comment given
-</a><a name="line-356" data-line="356"> -*/
-</a><a name="line-357" data-line="357">exports.parseLine = function( obj, line ) {
-</a><a name="line-358" data-line="358">	var tag = line[0];
-</a><a name="line-359" data-line="359">	line = line.substring( 1, line.length );
-</a><a name="line-360" data-line="360">	tags[tag]( obj, line );
-</a><a name="line-361" data-line="361">};
-</a><a name="line-362" data-line="362">
+</a><a name="line-338" data-line="338">	var regexp = /^\/[\S\s]+[\/gim]+$/;
+</a><a name="line-339" data-line="339">	text = text.trim();
+</a><a name="line-340" data-line="340">	// we start with string, preventing strings ( e.g. &quot;true&quot; ) is not incorrectely interpreted
+</a><a name="line-341" data-line="341">	if ( string.test( text ) ) {
+</a><a name="line-342" data-line="342">		return 'string';
+</a><a name="line-343" data-line="343">	} else if ( bool.test( text ) ) {
+</a><a name="line-344" data-line="344">		return 'boolean';
+</a><a name="line-345" data-line="345">	} else if ( number.test( text ) ) {
+</a><a name="line-346" data-line="346">		return 'number';
+</a><a name="line-347" data-line="347">	} else if ( regexp.test(text) ) {
+</a><a name="line-348" data-line="348">		return 'regexp';
+</a><a name="line-349" data-line="349">	}
+</a><a name="line-350" data-line="350">	return 'default';
+</a><a name="line-351" data-line="351">};
+</a><a name="line-352" data-line="352">/*-
+</a><a name="line-353" data-line="353"> * parseLine(obj, line)
+</a><a name="line-354" data-line="354"> [ function (public) ]
+</a><a name="line-355" data-line="355"> * parses the given line
+</a><a name="line-356" data-line="356"> &gt; Parameter
+</a><a name="line-357" data-line="357"> - obj (object) the object which should be extended with the right property
+</a><a name="line-358" data-line="358"> - line (string) the line to comment of the comment given
+</a><a name="line-359" data-line="359"> -*/
+</a><a name="line-360" data-line="360">exports.parseLine = function( obj, line ) {
+</a><a name="line-361" data-line="361">	var tag = line[0];
+</a><a name="line-362" data-line="362">	line = line.substring( 1, line.length );
+</a><a name="line-363" data-line="363">	tags[tag]( obj, line );
+</a><a name="line-364" data-line="364">};
+</a><a name="line-365" data-line="365">
 </a></pre></div></div></div></body></html>

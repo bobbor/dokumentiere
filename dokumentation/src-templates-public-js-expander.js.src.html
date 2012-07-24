@@ -36,14 +36,18 @@
 </a><a name="line-31" data-line="31">						// but it has not yet been pushed
 </a><a name="line-32" data-line="32">						// so we are at the wrapping dl
 </a><a name="line-33" data-line="33">						// which results in the penultimate item being the searched dd
-</a><a name="line-34" data-line="34">						path[path.length - 2].addClass('open');
-</a><a name="line-35" data-line="35">					}
-</a><a name="line-36" data-line="36">					path.push(elm);
-</a><a name="line-37" data-line="37">					elm = elm.parent();
-</a><a name="line-38" data-line="38">				}
-</a><a name="line-39" data-line="39">			}
-</a><a name="line-40" data-line="40">			callback();
-</a><a name="line-41" data-line="41">		}
-</a><a name="line-42" data-line="42">	};
-</a><a name="line-43" data-line="43">});
+</a><a name="line-34" data-line="34">						var cur = path[path.length - 2];
+</a><a name="line-35" data-line="35">						if(cur.is('dt')) {
+</a><a name="line-36" data-line="36">							cur = cur.next();
+</a><a name="line-37" data-line="37">						}
+</a><a name="line-38" data-line="38">						cur.addClass('open')
+</a><a name="line-39" data-line="39">					}
+</a><a name="line-40" data-line="40">					path.push(elm);
+</a><a name="line-41" data-line="41">					elm = elm.parent();
+</a><a name="line-42" data-line="42">				}
+</a><a name="line-43" data-line="43">			}
+</a><a name="line-44" data-line="44">			callback();
+</a><a name="line-45" data-line="45">		}
+</a><a name="line-46" data-line="46">	};
+</a><a name="line-47" data-line="47">});
 </a></pre></div></div></div></body></html>
