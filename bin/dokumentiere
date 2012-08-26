@@ -20,6 +20,7 @@ program
 	.option('-f, --files <files>', 'which files to document', list, './')
 	.option('-o, --out <outFolder>', 'the folder to put the files to', 'out')
 	.option('-e, --exclude <files>', 'which files to exclude', list, [''])
+	.option('-t, --template <dir>', 'if wanted, the folder to the own template', __dirname)
 	.parse(process.argv)
 ;
 ['files', 'exclude'].forEach(function(arg, j) {

@@ -1,7 +1,7 @@
 {
 	"name": "dokumentiere",
 	"description": "JavaScript documentation generator",
-	"version": "0.6.2",
+	"version": "0.6.3",
 	"author": "bobbor <bobbor.pap@gmail.com>",
 	"repository": {
 		"type": "git",
