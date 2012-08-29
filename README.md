@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/bobbor/dokumentiere.png)](http://travis-ci.org/bobbor/dokumentiere)
 # dokumentiere
 
 ## a node.js module for documentation
