@@ -1,139 +1,154 @@
-# dokumentiere
+dokumentiere
+============
 
-## a node.js module for documentation
 
-## Installation
+
+
+
+a node.js module for documentation
+----------------------------------
+
+Everything is totally up to you. (remember this sentence, i will come back to this sometimes) 
+
+**dokumentiere** does not parse any JS. it only parses the comments. so you can document the way you can read it the best. 
+
+documentation is written by people for people to understand code better or even at all. And the goal of **dokumentiere** is to explain the code with most meaning.
+
+
+
+
+Installation
+------------
 
 	npm -g install dokumentiere
-	
-## Usage
+
+
+
+
+
+Usage
+-----
 
 	dokumentiere -h
 
-	-f, --files   : tells which files to document, can be folders, scans those recursively
-	-o, --out     : tells where to to put the documentation to
-	-e, --exclude : tells which files, folders to exclude, recursively
-	
----
-		
-### See it in Action.
+	-h, --help                      : prints this help
+	-V, --version                   : version information,
+	-f, --files <files or folders>  : tells which files to document, can be folders, scans those recursively
+	-o, --out <OutputFolder>        : tells where to to put the documentation to
+	-e, --exclude <files or folders>: tells which files, folders to exclude, recursively
+	-t, --theme <name>              : which theme to use
 
-the source of this project is documented using dokumentiere. 
-you can browse the documentation (including the source) on:
-http://bobbor.github.com/dokumentiere
+The `files` and `excludes` parameters can handle multiple arguments seperated by commas. folders and/or files are allowed. You can do something like this:
 
----
+	dokumentiere -f js -e js/third-party/,js/my.min.js
+this documents all javascripts in the js-folder excluding the third-party folder and the my.min.js file.
 
-Let's jump right in
+HowTo
+-----
 
 		/*-
-		
-		 * myFunction
-		 
-		 [ function (public) ]
-		 
-		 * myFunction does some special stuff --> this is the summary
-		 * myFunction is not really special it accepts some parameters
-		 * and returns a value --> this is the description-body
-		 
-		 > Parameters
-		 - options (object) these are the first values
-		 -- property1 (boolean) this describes the key "property1" of the "options" parameter in detail
-		 - state* (string) <'active'> ['active', 'inactive'] tells which state should be applied @see options
-			
-			the asterisk states "state" is optional
-			(string) describes the type
-			<'active'> tells the default state if the parameter is not given
-			['active', 'inactive'] this array says which values are allowed
-			@see tells which other options or function should be looked for reference
-			
-		 = (object) the object that will be returned
-		 == property1 (string) the key "property1" of the returned object
-		 
+		 * Name
+		 [ type (scope or visibility) ]
+		 * description-header
+		 * description-body
+		 > segment-header
+		 - name (type) <defaultState> [validStates] description @see reference
+		 = (type) description-of-return-value
 		 > Usage
-		 | myFunction({
-		 |   property1: true
-		 | }, 'inactive');
-		 
+		 | code-sample
 		 -*/
-
-if you know Raphael.js and you have crawled through the source, you may notice some similarities. 
-To be honest, Raphael was our reference. when we decided to develop a documentation standard for our
-company, we didn't want the typical @-tags. they are too close to java-doc and the branched js-doc.
-these both documentation frameworks are pretty close to Class-based development patterns. 
-That is not the way our javascript is developed. we make heavy usage of fantastic javascript features
-like closures, callbacks or module-pattern. and we want to document jQuery-widgets or plugins too.
 
 
 ### detailed description
-		/*-
+
++ `/*-`
+
+	start of a documentation-block
+
++ `-*/` or `*/`
+
+	end of a documentation-block
+
++ _first line_ (here "`* Name`") (always starts with `*`)
+
+	states the name of the element to document
+
++ ` [ type (scope of visibility) ]`
+
+	says of which type it is. e.g _function_ or _widget_ or _Class_.
+	_Everything is totally up to you._
+	
+	as scope or visibility you state the scope (or context) in which the element is valid (e.g. a jQuery-widget may have the scope of its namespace, a node-module may have the scope of "node"). _Everything is totally up to you._
+
+	or the visibility if it is a function (private or public)
 		
-every documentation block is started by `/*-`
++ _description of the object_
 
-		 * myFunction
+		* description-header
+		* description-body
 		
-title of the object to describe
+	this is the description of the object. the first line is the summary and will be handled seperately. all other lines will be interpreted as the description body, where each lines generates its own paragraph
 
-		 [ function (details) ]
+
++ `>` - segments
+	
+	each block introduced with a `">"` reflects a collection of parameters or options 
+
+	possible identifier are `"Parameters"`, `"Options"`, `"Events"` and/or `"throws"`. 
+	but you may call it different. whatever fits your needs. _Everything is totally up to you._
+
+	**details:**
+
+	every line in a `>` - segment follows a certain pattern:
+	+ `-` it is always started with (at least) a dash
+	+ `name` --> the name of the item (paramter or option etc.)
+	+ `(type)` --> the type of the item (boolean, string etc.)
+	+ `<defaultState>` --> the defaultValue of the item _optional_
+	+ `[validStates]` --> the valid values the item can have _optional_
+	+ `description` --> the description of the item
+	+ `@see [.. ref ...]` --> a list of references
+
+	A special case is `"Usage"`.
+	
+	if you want to tell about invocation or instanciation, you name your segment "Usage" and tell (preformatted) how to use. Example:
 		
-the type of the object (this can be `"function"` or `"plugin"` or `"module"` etc.
+		> Usage
+		| makeMeFancy({
+		|   howfancy: 'very fancy'
+		| });
 
-the details object can be `"public"` or `"private"` for functions or the namespace etc.
++ `=` 
 
-		 * myFunction does some special stuff --> this is the summary
-		 * myFunction is not really special it accepts some parameters
-		 * and returns a value --> this is the description-body
+	this is return.
+	syntax is the same as in `-` in `>` - segments.
+
+	**NOTE:** Top-Level return values don't have names. (if you wonder -top-level-return-values- ?? what the?? read next block) 
+
+
+
+
+
+documentation nesting
+---------------------
+
+When you develop JavaScript, you see scenarios where your parameters or return-values are more complex than just "Numbers", "Boolean" or "Strings".
+
+But how do you document that your function accepts an object as argument with the property "howfancy" as a key?
+
+here is how it goes in **dokumentiere**
+
+example-Code:
 		
-this is the description of the object.
+		function makeMeFancy(obj) {
+			console.log(obj.howfancy);
+		}
 
-the first line is the summary and will be handled seperately
+example documentation (paramter-segment):
 
-all other lines will be as the description body, where each lines generates its own paragraph
+		> params
+		- obj (object) an object of arguments
+		-- howfancy (string) string stating how fancy to make
 
-		 > Parameters
-		
-each block introduced with a `">"` reflects a collection of parameters or options
+the second dash, forms a sort of tree. and this allows to document the keys of an object or some instance. This means that actually can document keys of objects which are keys of objects which are keys of objects etc.
 
-possible values are `"Parameters"` `"Options"` `"Events"` and `"throws"`. 
-
-A special case is `"Usage"`. I will tell about this one later.
-
-		 - options (object) these are the first values
-		 -- property1 (boolean) this describes the key "property1" of the "options" parameter in detail
-		 - state* (string) <'active'> ['active', 'inactive'] tells which state should be applied @see options
-			
-			the asterisk states "state" is optional
-			(string) describes the type
-			<'active'> tells the default state if the parameter is not given
-			['active', 'inactive'] this array says which values are allowed
-			@see tells which other options or function should be looked for reference
-		
-Each `">"` is followed by a list of `"-"` for each value. these follow a certain pattern.
-
-	- name(* if optional) (type) <defaultValue> [possibleValues] description @see reference
-
-if the type is object you can specify the properties of the object by indenting with an additional minus-sign.
-
-this is extendable to no limit (even `----------` is allowed)
-
-		 = (object) the object that will be returned
-		 == property1 (string) the key "property1" of the returned object
-
-the return statement is introduced by an equal-sign
- 
-this follows the typical `"-"` style for indentation and structure.
-
-except the top-level `=` can't have a name, since it won't get any
-
-		 > Usage
-		 | myFunction({
-		 |   property1: true
-		 | }, 'inactive');
-
-here is the `Usage`. it is special, since it is not followed by minus signs.
-
-Instead it is followed by vertical lines, which are transformed to code-examples. So formatting and whitespace is important.
-
-		 -*/
-		 
-and with `-*/` you end the documentation block.
+The same rules apply to the return (`=`) mechanics.
