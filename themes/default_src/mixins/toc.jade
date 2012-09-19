@@ -1,0 +1,21 @@
+mixin toc(tags, fns, ret)
+	if tags
+		.toc
+			h3 Inhalt
+			ol
+				if tags
+					- for( var tag in tags)
+						- if(tag !== 'Usage')
+							li
+								a(href="##{tag}")= tag
+				if fns
+					li
+						a(href="#Functions") Functions
+				if ret 
+					li
+						a(href="#Returns") Returns
+				
+				if tags 
+					if tags.Usage
+						li
+							a(href="#Usage") Usage

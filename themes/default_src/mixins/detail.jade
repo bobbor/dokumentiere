@@ -1,0 +1,34 @@
+mixin detail(details, name)
+	div.details
+		div.common
+			- if(details.name)
+				h4
+					a.icon-hand-right(href="##{name+'-'+details.name}", title="permalink here")
+					!{details.name}
+			- else
+				h4
+					a.icon-hand-right(href="##{name}", title="permalink here")
+					| &nbsp;
+			- if(details.type && 'length' in details.type)
+				ul(class="types types-#{details.type.length % 2 ? 'odd' : 'even'}")
+					for type in details.type
+						li(class="type-#{type.toLowerCase().trim()}")= type.toLowerCase().trim()
+		div.additionals
+			p	
+				!{details.desc}
+				- if(details.ref && details.ref.length)
+					for ref in details.ref
+						a.icon-caret-right(href="##{ref.link}") #{ref.name}
+			- if(details.defaults)
+				span.default
+					b standard
+					i(class="#{details.defaults.type}")= details.defaults.raw
+			- if(details.valids)
+				span.valid
+					b möglich
+					for valid,i in details.valids
+						if i !== 0
+							| , 
+						i(class="#{valid.type}")= valid.raw
+	- if(details.details)
+		mixin innertags(details.details, name+'-'+details.name)

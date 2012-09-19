@@ -1,0 +1,14 @@
+!!! 5
+html
+	head
+		title Dokumentation
+		link(rel="stylesheet",href="css/jquery.jscrollpane.css",media="all")
+		link(rel="stylesheet",href="css/style.css",media="all")
+		link(rel="stylesheet",href="css/font-awesome.css",media="all")
+		script(data-main="js/main.js",src="js/libs/require-jquery.js")
+	body
+		#wrapper
+			include partials/header
+			include partials/filter
+			#main.items
+				include partials/items.jade

@@ -1,0 +1,27 @@
+!!! 5
+html
+	head
+		meta(charset="utf-8")
+		title #{self.name} Dokumentation (Source)
+		link(rel="stylesheet",href="../css/jquery.jscrollpane.css",media="all")
+		link(rel="stylesheet",href="../css/style.css",media="all")
+		link(rel="stylesheet",href="../css/font-awesome.css",media="all")
+		link(rel="stylesheet",href="../css/sh.min.css",media="all")
+		script(src="../js/sh_main.min.js")
+		script(src="../js/sh_javascript.min.js")
+		script(data-main="../js/main.js",src="../js/libs/require-jquery.js")
+		script
+			$(function() {
+				if(location.hash) {
+					var name = location.hash.substring(1, location.hash.length);
+					$('a[name="'+name+'"]').addClass('highlight');
+				}
+			})
+	body#source(onload="sh_highlightDocument();")
+		#wrapper
+			#main
+				aside.items
+					include partials/header
+					include partials/filter
+					include partials/items
+				include partials/src_view

@@ -1,0 +1,5 @@
+mixin innertags(arr, name)
+	dl
+		for tag,i in arr
+			dd(id="#{tag.name ? name+'-'+ tag.name : ''+name}",class="#{tag.details ? 'extended' : ''}")
+				mixin detail(tag, name)

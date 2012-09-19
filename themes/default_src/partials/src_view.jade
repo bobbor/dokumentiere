@@ -1,0 +1,7 @@
+#content
+	h1 
+		span Source View
+		| #{self.name}
+	pre.sh_javascript
+		for line,i in self.src
+			a(name="line-#{i+1}",data-line="#{i+1}")= self.src[i]+'\r\n'

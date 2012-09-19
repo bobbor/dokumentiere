@@ -1,0 +1,12 @@
+#filter
+	form
+		.col.col-3
+			input(type="search",placeholder="Suche",name="filter")
+			button
+				span Los
+		.col.col-9
+			ul.props
+				for type in self.types
+					li
+						input(id="#{type}",type="checkbox",name="#{type}",checked)
+						label(for="#{type}")= type

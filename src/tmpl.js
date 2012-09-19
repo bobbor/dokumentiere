@@ -11,7 +11,8 @@ var jade = require( 'jade' );
 var cwd = process.cwd();
 var path = require( 'path' );
 var fs = require( 'fs' );
-var fc = require( './foldercopy' );
+var fse = require( './inc/fs_ext' );
+var log = require('./inc/logger');
 
 /*-
  * tmpl
@@ -31,12 +32,14 @@ var tmpl = {
 	 - obj (object) the comment-parsed object
 	 - out (string) the folder to put the documentation to
 	 -*/
-	generate: function( obj, out ) {
-		console.log('\nOutput Generation\n-----------------');
+	generate: function( obj, theme, out ) {
+		log.head('Output Generation');
 		var that = this;
 		this.out = out;
+		this.theme = theme;
 		var index = [];
 		var types = [];
+		log.info('using theme "'+this.theme+'"');
 		
 		
 		function startProcess() {
@@ -50,30 +53,40 @@ var tmpl = {
 					}
 				}
 			}
-			
-			that.index( index, types );
+			if(theme !== 'none') {
+				that.index( index, types );
+			}
 			
 			for( var prop in obj) {
 				if ( obj.hasOwnProperty( prop ) ) {
 					that.items( obj[prop], prop, index, types );
 				}
 			}
-			
-			fc.recursiveCopy( ['css', 'img', 'js'], ['templates', 'public'], out );
-		}
-		
-		fs.exists(out+'/sources/', function(exists) {
-			if(!exists) {
-				fs.mkdir(out+'/sources/', function(ex) {
-					if(ex) {
-						throw ex;
-					}
-					startProcess();
-				});
-			} else {
-				startProcess();
+			if(theme !== 'none') {
+				fse.reccopy(
+					path.normalize(__dirname+['/..', 'themes', that.theme, 'public'].join('/')), 
+					out+'/',
+					false,
+					function() {}
+				);
 			}
-		});
+		}
+		if(theme !== 'none') {
+			fs.exists(out+'/sources/', function(exists) {
+				if(!exists) {
+					fs.mkdir(out+'/sources/', function(ex) {
+						if(ex) {
+							throw ex;
+						}
+						startProcess();
+					});
+				} else {
+					startProcess();
+				}
+			});
+		} else {
+			startProcess();
+		}
 	},
 	/*-
 	 * index(arr, types)
@@ -90,8 +103,10 @@ var tmpl = {
 			index: arr,
 			types: types
 		}, function() {
-			that.writeHTML.apply( that, arguments );
-			console.log('generated index.html');
+			Array.prototype.push.call(arguments, function() {
+				log.info('generated index.html');
+			});
+			that.writeHTML.apply( that, arguments);
 		} );
 	},
 	/*-
@@ -107,27 +122,47 @@ var tmpl = {
 	 -*/
 	items: function( arr, file, index, types ) {
 		var that = this;
-		this.render('src', {
-			index: index,
-			types: types,
-			src: arr.src,
-			name: 'sources'+path.sep+file
-		}, function() {
-			that.writeHTML.apply(that, arguments);
-			console.log('generated source file for '+file);
-		});
+		var data = {};
+		if(this.theme !== 'none') {
+			this.render('src', {
+				index: index,
+				types: types,
+				src: arr.src,
+				name: 'sources'+path.sep+file
+			}, function() {
+				Array.prototype.push.call(arguments, function() {
+					log.info('generated source file for '+file);
+				});
+				that.writeHTML.apply(that, arguments);
+			});
+		}
 		
 		for( var i = 0, len = arr.length; i < len; i++) {
-			this.render( 'module', {
+			data = {
 				index: index,
 				item: arr[i],
 				file: file,
 				link: 'sources'+path.sep+file.replace(new RegExp('\\'+path.sep, 'g'), '-')+'.html',
 				types: types
-			}, function() {
-				that.writeHTML.apply( that, arguments );
-				console.log('generated documentation file for '+file);
-			} );
+			};
+			
+			if(that.theme !== 'none') {
+				this.render( 'module', data, function() {
+					Array.prototype.push.call(arguments, function() {
+						log.info('generated documentation file for '+file);
+					});
+					that.writeHTML.apply( that, arguments);
+				} );
+			} else {
+				var name = data.item
+							? ((data.item.scope || data.item.visibility) + '.' + (data.item && data.item.name))
+							: data.src
+								? data.name.replace(new RegExp('\\'+path.sep, 'g'), '-').replace('sources-', 'sources'+path.sep)
+								: 'index'
+				that.writeJSON(index, name, function() {
+					log.info('generated documentation file for '+file);
+				});
+			}
 		}
 	},
 	/*-
@@ -141,23 +176,34 @@ var tmpl = {
 	 - callback (function) the function to call with the html
 	 -*/
 	render: function( tmplName, data, callback ) {
-		var name = __dirname + path.sep + 'templates' + path.sep + tmplName + '.jade';
-		fs.readFile( name, 'utf8', function( err, content ) {
-			if ( err ) {
-				throw err;
+		var themeFolder = [__dirname,'..','themes',this.theme];
+		var template = themeFolder.concat([tmplName+'.jade']);
+		var name = template.join(path.sep);
+		var that = this;
+		
+		fs.exists(themeFolder.join(path.sep), function(exists) {
+			if(exists) {
+				fs.readFile( name, 'utf8', function( err, content ) {
+					if ( err ) {
+						throw err;
+					}
+					var fn = jade.compile( content, {
+						filename: name,
+						self: true
+					} );
+					callback( fn( data ), 
+						data.item
+							? ((data.item.scope || data.item.visibility) + '.' + (data.item && data.item.name))
+							: data.src
+								? data.name.replace(new RegExp('\\'+path.sep, 'g'), '-').replace('sources-', 'sources'+path.sep)
+								: 'index'
+					);
+				} );
+				return;
 			}
-			var fn = jade.compile( content, {
-				filename: name,
-				self: true
-			} );
-			callback( fn( data ), 
-				data.item
-					? ((data.item.scope || data.item.visibility) + '.' + (data.item && data.item.name))
-					: data.src
-						? data.name.replace(new RegExp('\\'+path.sep, 'g'), '-').replace('sources-', 'sources'+path.sep)
-						: 'index'
-			);
-		} );
+			log.error("no theme folder called "+that.theme+'. Aborting');
+			process.exit(1);
+		});
 	},
 	/*-
 	 * writeHTML(html, name);
@@ -168,14 +214,25 @@ var tmpl = {
 	 - html (string) the compiled HTML
 	 - name (string) the name of the file to write to
 	 -*/
-	writeHTML: function( html, name ) {
+	writeHTML: function( html, name, cb ) {
 		fs.writeFile(this.out + path.sep + name + '.html', html, 'utf8', function( err ) {
 			if ( err ) {
-				console.log( 'could not document ' + name + '.html, because: ' );
-				console.log( err );
+				log.error( 'could not document ' + name + '.html, because: ' );
+				log.error( JSON.stringify(err) );
 				return;
 			}
-			// console.log('documented '+name+'.html');
+			cb()
+		} );
+	},
+	
+	writeJSON: function( json, name, cb ) {
+		fs.writeFile(this.out + path.sep + name + '.json', JSON.stringify(json, null, '  '), 'utf8', function( err ) {
+			if ( err ) {
+				log.error( 'could not document ' + name + '.json, because: ' );
+				log.error( JSON.stringify(err) );
+				return;
+			}
+			cb()
 		} );
 	}
 };

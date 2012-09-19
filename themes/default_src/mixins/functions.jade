@@ -1,0 +1,23 @@
+mixin functions(fns, link)
+	dl
+		- for( var i = 0; i < fns.length; i++)
+			- var shortname = fns[i].name.replace(/\([\S\s]*\)/gi, '');
+			dt(id="function-#{shortname}")
+				a.icon-hand-right(href="#function-#{shortname}", title="permalink here")
+				!{'<i class="'+(fns[i].visibility === "private" ? 'icon-eye-close' : 'icon-eye-open')+'">'+fns[i].visibility+'</i> '+fns[i].name}
+				a.icon-screenshot(title="locate in code",href="#{link}#line-#{fns[i].line}")
+			dd
+				h3!= fns[i].description[0].desc
+				if fns[i].description[0].ref.length
+					p
+						for ref in fns[i].description[0].ref
+							a.icon-caret-right(href="##{ref.link}") #{ref.name}
+				- var desc = [], refs = [];
+				- for(var j = 1; j < fns[i].description.length; j++)
+					- desc.push(fns[i].description[j].desc);refs = refs.concat(fns[i].description[j].ref)
+				p
+					| !{desc.join(' ')}
+					if refs.length
+						for ref in refs
+							a.icon-caret-right(href="##{ref.link}") #{ref.name}
+				mixin outertags(fns[i].tags, null, fns[i].returns, link, "function-"+fns[i].name.replace(/\([\S\s]*\)/gi, ''))

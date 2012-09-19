@@ -1,0 +1,46 @@
+//- include all mixins
+
+include ../mixins/detail
+include ../mixins/innertags
+include ../mixins/outertags
+include ../mixins/functions
+include ../mixins/toc
+include ../mixins/use
+
+#content
+	h1
+		span #{self.item.scope ? self.item.scope+'.' : ''}
+		| #{self.item.name}
+	strong #{self.item.type}#{self.item.visibility ? ' ('+self.item.visibility+')' : ''}#{self.item.author ? ' (by '+self.item.author.join(',')+')' : ''}, 
+		a(href="#{self.link}")= self.file
+	h2= self.item.description[0].desc
+		a.icon-screenshot(title="locate in code",href="#{self.link}#line-#{self.item.line}")
+	if self.item.description[0].ref.length
+		p
+			for ref in self.item.description[0].ref
+				a(href="##{ref.link}") #{ref.name}
+	- var desc = [], refs = [];
+	- for(var j = 1; j < self.item.description.length; j++)
+		- desc.push(self.item.description[j].desc);refs = refs.concat(self.item.description[j].ref)
+	- if(desc && refs)
+		p
+			| #{desc.join(' ')}
+			if refs
+				for ref in refs
+					a(href="##{ref.link}") #{ref.name}
+	- if(self.item.warning)
+		.warning
+			p.icon-warning-sign= self.item.warning.join(' ')
+	if self.item.deps
+		dl.dependencies
+			dt Dependencies
+			for dep in self.item.deps
+				dd= dep
+	if self.item.expando
+		dl.supers
+			dt Extends
+			for sup in self.item.expando
+				dd
+					a(href="#{sup}.html")= sup
+	mixin toc(self.item.tags, self.item.functions, self.item.returns)
+	mixin outertags(self.item.tags, self.item.functions, self.item.returns, self.link)

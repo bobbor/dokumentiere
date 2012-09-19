@@ -1,0 +1,14 @@
+- var __src = 'src' in self;
+
+for item in self.index
+	section.col.col-3(data-type="#{item.type}",data-name="#{item.name}")
+		- var name = item.name;
+		- name = name.length > 18 ? name.substring(0, 15)+'...' : name
+		h1
+			a(href="#{ (__src ? '../' : '')+((item.scope || item.visibility)+'.'+(item && item.name))}.html")= name
+		- var type = item.type+' ('+ (item.scope || item.visibility)+')'
+		- type = type.length > 25 ? type.substring(0, 22)+'...' : type;
+		h2= type
+		- var desc = item.description[0].desc;
+		- desc = desc.length > 70 ? desc.substring(0, 67)+'...' : desc; 
+		p= desc

@@ -1,0 +1,20 @@
+mixin outertags(arr, fns, ret, link, prefix)
+	- prefix = typeof prefix !== 'undefined' ? prefix+'-' : ''
+	dl.tags
+		- for( var tag in arr)
+			- if(tag !== 'Usage')
+				dt(id="#{prefix+tag}")= tag
+				for tagdetail in arr[tag]
+					dd(id="#{tagdetail.name ? prefix+tag+'-'+ tagdetail.name : ''+prefix+tag}",class="#{tagdetail.details ? 'extended' : ''}")
+						mixin detail(tagdetail, prefix+tag)
+		if ret
+			dt(id="#{prefix+'Returns'}") Returns
+				for item,i in ret
+					dd(id="#{item.name ? prefix+'Returns-'+ item.name : prefix+'Returns-'+i}",class="#{item.details ? 'extended' : ''}")
+						mixin detail(item, prefix+'Returns-'+i)
+		if fns
+			dt#Functions Functions
+			dd.functions
+				mixin functions(fns, link)
+		- if (arr && arr.Usage)
+			mixin use(arr.Usage)

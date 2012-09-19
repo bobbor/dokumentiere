@@ -8,10 +8,13 @@
 // \--------------------------------------------/
 
 var fs = require( 'fs' );
+var fse = require('./inc/fs_ext');
 var parseLine = require( './tags' ).parseLine;
 var tmpl = require( './tmpl' );
 var events = require('events');
 var path = require('path');
+var log = require('./inc/logger');
+
 path.sep = require('os').platform().indexOf('win') === 0 ? '\\' : '/';
 
 function Iterator( arr ) {
@@ -41,7 +44,7 @@ function inherit(A,B) {
 
 function Doku() {
 	var inst = this;
-	this.version = '0.7.0';
+	this.version = '0.7.2';
 	
 	this.addListener('doku-filechecked', function(files) {
 		inst.parse(files, inst.out);
@@ -50,23 +53,25 @@ function Doku() {
 
 inherit(Doku, events.EventEmitter);
 
-Doku.prototype.generateDokumentation = function(files, exclude, out, base) {
+Doku.prototype.generateDokumentation = function(files, exclude, out, base, theme) {
 	this.out = out;
 	var inst = this;
 	
-	console.log('\nArgument Processing\n--------------------');
-	console.log('checking which files to consider');
+	inst.theme = theme || 'default';
+	log.head('Argument Processing');
+	log.info('checking which files to consider');
+	
 	base = base.replace(/(\\|\/)/g, path.sep);
 	function iterateOverFiles(callback) {
 		var cleared = [];
 		
 		function iterate(files) {
 			if(!files.length) {
+				log.info('have all files');
 				callback(cleared);
 				return;
 			}
 			var item = files.pop();
-			
 			for(var i = 0, len = exclude.length; i < len; i++) {
 				if(item.indexOf(exclude[i]) !== -1) {
 					iterate(files);
@@ -98,9 +103,13 @@ Doku.prototype.generateDokumentation = function(files, exclude, out, base) {
 	}
 
 	iterateOverFiles(function(files) {
-		fs.stat(out, function(err, stat) {
-			if(err) {
-				fs.mkdir(err.path, function(o_O) {
+		fs.exists(out, function(exists) {
+			if(exists) {
+				fse.recrmdir(out, true, function() {
+					inst.emit('doku-filechecked', files);
+				});
+			} else {
+				fs.mkdir(out, function(o_O) {
 					if(o_O) {
 						inst.emit('error', 1);
 						process.exit(1);
@@ -108,9 +117,7 @@ Doku.prototype.generateDokumentation = function(files, exclude, out, base) {
 					}
 					inst.emit('doku-filechecked', files);
 				});
-				return;
 			}
-			inst.emit('doku-filechecked', files);
 		});
 	});
 };
@@ -122,16 +129,17 @@ Doku.prototype.parse = function( files, out ) {
 		var parsedCounter = files.length;
 		
 		function fileParsed(name, content, src) {
-			console.log('file parsed: '+name +', '+(--parsedCounter)+' to go.');
+			--parsedCounter;
+			log.info('['+(files.length-parsedCounter)+' of '+files.length+'] - file parsed: '+name);
 			if(!content.length) {
-				console.log(name+' has no comment(s). skipping');
+				log.warn('\t - '+name+' has no comment(s). skipping');
 			} else {
 				raw[name] = content;
 				clearFns.call( raw[name] );
 				raw[name].src = src.replace( /\r\n/gm, '\n' ).split('\n');
 			}
 			if(!parsedCounter) {
-				tmpl.generate( raw, out );
+				tmpl.generate( raw, inst.theme, out );
 				inst.emit('done');
 			}
 		}
@@ -162,9 +170,8 @@ Doku.prototype.parse = function( files, out ) {
 			filesIterator.next();
 			iterate();
 		};
-		console.log('\nComment Parsing\n---------------');
-		
-		console.log('reading all files');
+		log.head('Comment Parsing');
+		log.info('reading all files');
 		iterate();
 };
 
@@ -255,6 +262,17 @@ Doku.prototype.parseComment = function( comment, line) {
 		parseLine( co, comment[i] );
 	}
 	return co;
+};
+
+Doku.prototype.installTheme = function(theme) {
+	fse.reccopy(
+		theme, 
+		path.normalize(__dirname+'/../themes/'),
+		true,
+		function() {
+			log.info('installed');
+		}
+	);
 };
 
 

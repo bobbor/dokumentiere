@@ -19,20 +19,26 @@ program
 	.version(doku.version)
 	.option('-f, --files <files>', 'which files to document', list, './')
 	.option('-o, --out <outFolder>', 'the folder to put the files to', 'out')
-	.option('-e, --exclude <files>', 'which files to exclude', list, [''])
-	.option('-t, --template <dir>', 'if wanted, the folder to the own template', __dirname)
+	.option('-e, --exclude <files>', 'which files to exclude', list, [])
+	.option('-t, --theme <name>', 'if wanted, the folder to the own template', 'default')
 	.parse(process.argv)
 ;
-['files', 'exclude', 'out'].forEach(function(arg, j) {
-	if(program[arg]) {
-		if(_.isArray(program[arg])) {
-			args[arg] = program[arg].map(function(elm, i, arr) {
-				return cwd+path.sep+elm;
-			});
-		} else {
-			args[arg] = cwd+path.sep+program[arg];
-		}
-	}
-}); 
 
-doku.generateDokumentation(args['files'], args['exclude'], args['out'], cwd);
+if(program.args[0] === 'installtheme') {
+	var themePath = path.resolve(cwd, program.args[1]);
+	doku.installTheme(themePath);
+} else {
+	['files', 'exclude', 'out'].forEach(function(arg, j) {
+		if(program[arg]) {
+			if(_.isArray(program[arg])) {
+				args[arg] = program[arg].map(function(elm, i, arr) {
+					return cwd+path.sep+elm;
+				});
+			} else {
+				args[arg] = cwd+path.sep+program[arg];
+			}
+		}
+	});
+	
+	doku.generateDokumentation(args['files'], args['exclude'], args['out'], cwd, program.theme);
+}
