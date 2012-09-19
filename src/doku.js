@@ -189,7 +189,7 @@ Doku.prototype.parseFile = function( fileName, text ) {
 	
 	parsedText.forEach(function(line, i) {
 		var t = line.trim();
-		if ( t.indexOf( '-*/' ) === 0 ) {
+		if ( t.indexOf( '-*/' ) === 0 || t.indexOf('*/') === 0) {
 			if ( inComment ) {
 				comments.push({
 					comment: comment,

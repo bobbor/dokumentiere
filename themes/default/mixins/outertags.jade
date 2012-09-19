@@ -12,9 +12,9 @@ mixin outertags(arr, fns, ret, link, prefix)
 				for item,i in ret
 					dd(id="#{item.name ? prefix+'Returns-'+ item.name : prefix+'Returns-'+i}",class="#{item.details ? 'extended' : ''}")
 						mixin detail(item, prefix+'Returns-'+i)
+		- if (arr && arr.Usage)
+			mixin use(arr.Usage)
 		if fns
 			dt#Functions Functions
 			dd.functions
 				mixin functions(fns, link)
-		- if (arr && arr.Usage)
-			mixin use(arr.Usage)
