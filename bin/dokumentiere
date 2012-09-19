@@ -2,17 +2,17 @@
 
 var
 	  program      = require('commander')
-	, util         = require('util')
 	, doku         = require('../')
 	, cwd          = process.cwd()
-	, fs           = require('fs')
 	, path         = require('path')
+	, _            = require('underscore')
 	, list         = function(items) {
 		return items.split(',') || [];
 	}
 	;
 	
 	path.sep = require('os').platform().indexOf('win') === 0 ? '\\' : '/';
+	var args = {};
 
 
 program
@@ -23,60 +23,16 @@ program
 	.option('-t, --template <dir>', 'if wanted, the folder to the own template', __dirname)
 	.parse(process.argv)
 ;
-['files', 'exclude'].forEach(function(arg, j) {
-	program[arg] = program[arg].map(function(elm, i, arr) {
-		return cwd+path.sep+elm;
-	});
+['files', 'exclude', 'out'].forEach(function(arg, j) {
+	if(program[arg]) {
+		if(_.isArray(program[arg])) {
+			args[arg] = program[arg].map(function(elm, i, arr) {
+				return cwd+path.sep+elm;
+			});
+		} else {
+			args[arg] = cwd+path.sep+program[arg];
+		}
+	}
 }); 
 
-function iterateOverFiles(callback) {
-	var cleared = [];
-	function iterate(files) {
-		if(!files.length) {
-			callback(cleared);
-			return;
-		}
-		var item = files.pop();
-		if(program.exclude.indexOf(item) !== -1) {
-			iterate(files);
-			return;
-		}
-		fs.stat(item, function(err, stat) {
-			if(err) { throw err; return; }
-			if(stat.isDirectory()) {
-				fs.readdir(item, function(err, items) {
-					if(err) { throw err; }
-					for(var i = 0, len = items.length; i < len; i++) {
-						files.push(item+path.sep+items[i]);
-					}
-					iterate(files);
-				});
-			} else {
-				if(/\.js$/.test(item)) {
-					cleared.push({
-						path: item,
-						name: item.substring(cwd.length+path.sep.length, item.length)
-					});
-				}
-				iterate(files);
-			}
-		});
-	}
-	iterate(program.files);
-}
-
-iterateOverFiles(function(files) {
-	fs.stat(cwd+path.sep+program.out, function(err, stat) {
-		if(err) {
-			fs.mkdir(err.path, function(o_O) {
-				if(o_O) {
-					console.log('cannot create out folder');
-					process.exit(1);
-				}
-				doku.parse(files, program.out);
-			});
-			return;
-		}
-		doku.parse(files, program.out);
-	});
-});
+doku.generateDokumentation(args['files'], args['exclude'], args['out'], cwd);

@@ -33,7 +33,6 @@ var foldercopy = {
 	recursiveCopy: function( folders, p, dest ) {
 		var that = this;
 		var base = __dirname + path.sep + p.join( path.sep );
-		dest = cwd + path.sep + dest;
 		folders.forEach( function( elm, i, folders ) {
 			that.copyFolder( base, elm, '', dest );
 		} );

@@ -32,29 +32,48 @@ var tmpl = {
 	 - out (string) the folder to put the documentation to
 	 -*/
 	generate: function( obj, out ) {
+		console.log('\nOutput Generation\n-----------------');
+		var that = this;
 		this.out = out;
 		var index = [];
 		var types = [];
-		for( var prop in obj) {
-			if ( obj.hasOwnProperty( prop ) ) {
-				index = index.concat( obj[prop] );
-				for( var i = 0, file = obj[prop], len = file.length; i < len; i++) {
-					if ( !~types.indexOf( file[i].type ) ) {
-						types.push( file[i].type );
+		
+		
+		function startProcess() {
+			for( var prop in obj) {
+				if ( obj.hasOwnProperty( prop ) ) {
+					index = index.concat( obj[prop] );
+					for( var i = 0, file = obj[prop], len = file.length; i < len; i++) {
+						if ( !~types.indexOf( file[i].type ) ) {
+							types.push( file[i].type );
+						}
 					}
 				}
 			}
-		}
-		
-		this.index( index, types );
-		
-		for( var prop in obj) {
-			if ( obj.hasOwnProperty( prop ) ) {
-				this.items( obj[prop], prop, index, types );
+			
+			that.index( index, types );
+			
+			for( var prop in obj) {
+				if ( obj.hasOwnProperty( prop ) ) {
+					that.items( obj[prop], prop, index, types );
+				}
 			}
+			
+			fc.recursiveCopy( ['css', 'img', 'js'], ['templates', 'public'], out );
 		}
 		
-		fc.recursiveCopy( ['css', 'img', 'js'], ['templates', 'public'], out );
+		fs.exists(out+'/sources/', function(exists) {
+			if(!exists) {
+				fs.mkdir(out+'/sources/', function(ex) {
+					if(ex) {
+						throw ex;
+					}
+					startProcess();
+				});
+			} else {
+				startProcess();
+			}
+		});
 	},
 	/*-
 	 * index(arr, types)
@@ -72,6 +91,7 @@ var tmpl = {
 			types: types
 		}, function() {
 			that.writeHTML.apply( that, arguments );
+			console.log('generated index.html');
 		} );
 	},
 	/*-
@@ -91,19 +111,22 @@ var tmpl = {
 			index: index,
 			types: types,
 			src: arr.src,
-			name: file
+			name: 'sources'+path.sep+file
 		}, function() {
 			that.writeHTML.apply(that, arguments);
+			console.log('generated source file for '+file);
 		});
+		
 		for( var i = 0, len = arr.length; i < len; i++) {
 			this.render( 'module', {
 				index: index,
 				item: arr[i],
 				file: file,
-				link: file.replace(new RegExp('\\'+path.sep, 'g'), '-')+'.src.html',
+				link: 'sources'+path.sep+file.replace(new RegExp('\\'+path.sep, 'g'), '-')+'.html',
 				types: types
 			}, function() {
 				that.writeHTML.apply( that, arguments );
+				console.log('generated documentation file for '+file);
 			} );
 		}
 	},
@@ -131,7 +154,7 @@ var tmpl = {
 				data.item
 					? ((data.item.scope || data.item.visibility) + '.' + (data.item && data.item.name))
 					: data.src
-						? data.name.replace(new RegExp('\\'+path.sep, 'g'), '-') + '.src' 
+						? data.name.replace(new RegExp('\\'+path.sep, 'g'), '-').replace('sources-', 'sources'+path.sep)
 						: 'index'
 			);
 		} );
@@ -146,7 +169,7 @@ var tmpl = {
 	 - name (string) the name of the file to write to
 	 -*/
 	writeHTML: function( html, name ) {
-		fs.writeFile( cwd + path.sep + this.out + path.sep + name + '.html', html, 'utf8', function( err ) {
+		fs.writeFile(this.out + path.sep + name + '.html', html, 'utf8', function( err ) {
 			if ( err ) {
 				console.log( 'could not document ' + name + '.html, because: ' );
 				console.log( err );
